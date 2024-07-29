@@ -1,6 +1,6 @@
 {
   "name": "reacthomepage",
-  "version": "3.0.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "clean": "rimraf ./ClientApp/dist ./wwwroot/dist",

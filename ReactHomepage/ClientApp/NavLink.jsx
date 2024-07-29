@@ -1,20 +1,22 @@
-﻿import React, { Component } from 'react';
+﻿import React from 'react';
+import { Link, useLocation, useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router';
 
-export default class NavLink extends Component {
-    render() {
-        let isActive = this.context.router.isActive(this.props.to, true);
-        let className = isActive ? "active" : "";
+const NavLink = (props) => {
+  const location = useLocation();
+  const history = useHistory();
+  const isActive = history.isActive ? history.isActive(props.to, true) : location.pathname === props.to;
+  const className = isActive ? 'active' : '';
 
-        return (
-            <li className={className}>
-                <Link {...this.props} />
-            </li>
-        );
-    }
-}
-
-NavLink.contextTypes = {
-     router: PropTypes.object
+  return (
+    <li className={className}>
+      <Link {...props} />
+    </li>
+  );
 };
+
+NavLink.propTypes = {
+  to: PropTypes.string.isRequired,
+};
+
+export default NavLink;
