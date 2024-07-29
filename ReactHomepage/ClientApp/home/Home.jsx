@@ -2,67 +2,34 @@
 import { Link } from 'react-router-dom';
 import { routeChangedSignal } from '../Frame';
 import PhotoFrame from '../photos/PhotoFrame';
-import WidgetFrame from './WidgetFrame';
 import epostJpg from '../../wwwroot/Content/images/mail.png';
 import { Animate, AnimateKeyframes } from "react-simple-animate";
 
 const Home = () => {
   const [isClient, setIsClient] = useState(false);
-  const [widgetLoaded, setWidgetLoaded] = useState(false);
-  const [rand] = useState(Math.floor(Math.random() * 10000));
   const [play, setPlay] = useState(false);
+  const [rand] = useState(Math.floor(Math.random() * 10000));
 
   useEffect(() => {
-    // Check if running on the client-side
     setIsClient(typeof window !== 'undefined');
 
-    // Dynamically load the weather widget script
     if (isClient) {
       setPlay(true);
-      if (!widgetLoaded) {
-        const script = document.createElement('script');
-        script.src = "https://www.klart.se/widget/widget_loader/420cee0ee12535cd2a922993c70ebd2e";
-        script.async = true;
-        script.onload = () => setWidgetLoaded(true);
-        document.body.appendChild(script);
-      }
+
+      // Load the weather widget script
+      const script = document.createElement('script');
+      script.src = 'https://weatherwidget.io/js/widget.min.js';
+      script.async = true;
+      document.body.appendChild(script);
     }
 
     setTimeout(() => { routeChangedSignal.dispatch('home'); }, 100);
-  }, [isClient, widgetLoaded]);
+  }, [isClient]);
 
   const props = {
     startStyle: { opacity: 0 },
     endStyle: { opacity: 1 }
   };
-
-  const getScript = (source, callback) => {
-    const script = document.createElement('script');
-    const prior = document.getElementsByTagName('script')[0];
-    script.async = true;
-    script.onload = script.onreadystatechange = (_, isAbort) => {
-      if (isAbort || !script.readyState || /loaded|complete/.test(script.readyState)) {
-        script.onload = script.onreadystatechange = null;
-        if (!isAbort && callback) callback();
-      }
-    };
-    script.src = source;
-    prior.parentNode.insertBefore(script, prior);
-  };
-
-  const weatherWidget = isClient ? (
-    <WidgetFrame fn={() => getScript("https://www.klart.se/widget/widget_loader/420cee0ee12535cd2a922993c70ebd2e", () => { })}>
-      <div className="row">
-        <div id="c_420cee0ee12535cd2a922993c70ebd2e" className="center-block widget" />
-      </div>
-    </WidgetFrame>
-  ) : (
-    <WidgetFrame fn={null}>
-      <div className="row">
-        <div id="c_420cee0ee12535cd2a922993c70ebd2e" className="center-block widget" />
-      </div>
-    </WidgetFrame>
-  );
 
   const animatedImage = isClient ? (
     <Animate play={play} durationSeconds={3} {...props}>
@@ -177,7 +144,13 @@ const Home = () => {
                       <div className="panel-body panel-height_small">
                         <div id="divWeather" style={{ verticalAlign: "textTop" }}>
                           <Animate play={play} durationSeconds={3} delaySeconds={2.1} {...props}>
-                            {weatherWidget}
+                            <a className="weatherwidget-io"
+                              href="https://forecast7.com/en/40d71n74d01/new-york/"
+                              data-label_1="NEW YORK"
+                              data-label_2="WEATHER"
+                              data-theme="original">
+                              NEW YORK WEATHER
+                            </a>
                           </Animate>
                         </div>
                       </div>
@@ -200,7 +173,7 @@ const Home = () => {
                     <h3 className="panel-title">Panel 1</h3>
                   </div>
                   <div className="panel-body">
-                    Welcome to React Homapge
+                    Welcome to React Homepage
                     <div>
                       <center>Don't hesitate to contact me at 010-123 456</center>
                     </div>

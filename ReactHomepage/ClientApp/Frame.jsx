@@ -1,9 +1,9 @@
 ﻿import React, { useState, useEffect, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
-import MiniSignal from 'mini-signals';
-import logo from "./../wwwroot/Content/images/Logo.png";
+import logo from "./../wwwroot/Content/images/info.png";
 import hamburger from "./../wwwroot/Content/images/Hamburger.png";
 import ReactSvgIcon from "./common/ReactSvgIcon";
+import MiniSignal from 'mini-signals';
 
 export const routeChangedSignal = new MiniSignal();
 export const userIsIdentifiedSignal = new MiniSignal();
@@ -22,10 +22,7 @@ const Frame = (props) => {
   const sidebarRef = useRef(null);
   const menuRefs = {
     homeLi: useRef(null),
-    sqlLi: useRef(null),
-    ltbLi: useRef(null),
     albumsLi: useRef(null),
-    ordtestLi: useRef(null),
     userLi: useRef(null),
   };
 
@@ -105,7 +102,7 @@ const Frame = (props) => {
       <header className="navbar navbar-expand-lg navbar-light bg-light" style={{ background: todaysHeaderCss, height: '81px', margin: '0' }}>
         <div className="container">
           <a className="navbar-brand pb-5 mb-3" href="/">
-            <ReactSvgIcon text={'SireusCore'} icon={logo} iconClass={'logo'} />
+            <ReactSvgIcon text={'ReactHomepage'} icon={logo} iconClass={'logo'} />
           </a>
           <button ref={elCollapseButton} className="navbar-toggler" type="button">
             <span className="navbar-toggler-icon"><img src={hamburger} alt="Hamburger Icon" /></span>
@@ -115,25 +112,16 @@ const Frame = (props) => {
               <li ref={menuRefs.homeLi} className="nav-item">
                 <NavLink exact to="/" className="nav-link no-underline" onClick={closeSidebar}>Home<span /></NavLink>
               </li>
-              <li ref={menuRefs.ordtestLi} className="nav-item">
-                <NavLink to="/ordtest" className="nav-link no-underline" onClick={closeSidebar}>Word&nbsp;test<span /></NavLink>
-              </li>
               <li ref={menuRefs.albumsLi} className="nav-item">
                 <NavLink to="/albums" className="nav-link no-underline" onClick={closeSidebar}>Album<span /></NavLink>
-              </li>
-              <li ref={menuRefs.ltbLi} className="nav-item">
-                <NavLink to="/ltb" className="nav-link no-underline" onClick={closeSidebar}>LTB<span /></NavLink>
-              </li>
-              <li ref={menuRefs.sqlLi} className="nav-item">
-                <NavLink to="/sql" className="nav-link no-underline" onClick={closeSidebar}>SQL<span /></NavLink>
               </li>
             </ul>
             <ul className="navbar-nav navbar-nav-right spriteTabs">
               <li className="nav-item">
-                <a href="https://www.google.com/maps/place/Grimstahamnsv%C3%A4gen+4,+168+39+Bromma/@59.3345682,17.9231671,16z/data=!3m1!4b1!4m6!3m5!1s0x465f75e4cbc3d48d:0x855e7a82ffe092cf!8m2!3d59.3345655!4d17.925742!16s%2Fg%2F11csgw2_cv?entry=ttu" target="_blank" rel="noopener noreferrer" className="nav-link no-underline"><span></span>&nbsp;&nbsp;<i className="fas fa-map-marker-alt"></i><span></span></a>
+                <a href="https://www.google.com/maps/place/Statue+of+Liberty/@40.688969,-113.0657959,4z/data=!4m10!1m2!2m1!1sstaue+of+liberty!3m6!1s0x89c25090129c363d:0x40c6a5770d25022b!8m2!3d40.6892494!4d-74.0445004!15sChFzdGF0dWUgb2YgbGliZXJ0eVoTIhFzdGF0dWUgb2YgbGliZXJ0eZIBE2hpc3RvcmljYWxfbGFuZG1hcmvgAQA!16zL20vMDcycDg?entry=ttu" target="_blank" rel="noopener noreferrer" className="nav-link no-underline"><span></span>&nbsp;&nbsp;<i className="fas fa-map-marker-alt"></i><span></span></a>
               </li>
               <li className="nav-item">
-                <NavLink to="/user" className="nav-link no-underline"><span></span>&nbsp;<i className="fas fa-user"></i><span /></NavLink>
+                <NavLink to="/user" className="nav-link no-underline"><span></span>&nbsp;<i className="fas fa-user"></i><span></span></NavLink>
               </li>
             </ul>
           </div>
@@ -142,7 +130,7 @@ const Frame = (props) => {
 
       <div className={`sidebar ${sidebarOpen ? 'open' : ''}`} ref={sidebarRef}>
         <div className="sidebar-header">
-          <a href="https://www.google.com/maps/place/Grimstahamnsv%C3%A4gen+4,+168+39+Bromma/@59.3345682,17.9231671,16z/data=!3m1!4b1!4m6!3m5!1s0x465f75e4cbc3d48d:0x855e7a82ffe092cf!8m2!3d59.3345655!4d17.925742!16s%2Fg%2F11csgw2_cv?entry=ttu" target="_blank" rel="noopener noreferrer" className="nav-link"><i className="fas fa-map-marker-alt"></i></a>
+          <a href="https://www.google.com/maps/place/Statue+of+Liberty/@40.688969,-113.0657959,4z/data=!4m10!1m2!2m1!1sstaue+of+liberty!3m6!1s0x89c25090129c363d:0x40c6a5770d25022b!8m2!3d40.6892494!4d-74.0445004!15sChFzdGF0dWUgb2YgbGliZXJ0eVoTIhFzdGF0dWUgb2YgbGliZXJ0eZIBE2hpc3RvcmljYWxfbGFuZG1hcmvgAQA!16zL20vMDcycDg?entry=ttu" target="_blank" rel="noopener noreferrer" className="nav-link no-underline"><span></span>&nbsp;&nbsp;<i className="fas fa-map-marker-alt"></i><span></span></a>
           <NavLink to="/user" className="nav-link" onClick={closeSidebar}><i className="fas fa-user"></i></NavLink>
         </div>
         <div className="nav-list">
@@ -150,17 +138,8 @@ const Frame = (props) => {
             <li ref={menuRefs.homeLi} className="nav-item">
               <NavLink exact to="/" className="nav-link" onClick={closeSidebar}>Home</NavLink>
             </li>
-            <li ref={menuRefs.ordtestLi} className="nav-item">
-              <NavLink to="/ordtest" className="nav-link" onClick={closeSidebar}>Word test</NavLink>
-            </li>
             <li ref={menuRefs.albumsLi} className="nav-item">
               <NavLink to="/albums" className="nav-link" onClick={closeSidebar}>Album</NavLink>
-            </li>
-            <li ref={menuRefs.ltbLi} className="nav-item">
-              <NavLink to="/ltb" className="nav-link" onClick={closeSidebar}>LTB</NavLink>
-            </li>
-            <li ref={menuRefs.sqlLi} className="nav-item">
-              <NavLink to="/sql" className="nav-link" onClick={closeSidebar}>SQL</NavLink>
             </li>
           </ul>
         </div>
@@ -172,7 +151,7 @@ const Frame = (props) => {
 
       <footer className="bg-light text-center text-lg-start" style={{ background: todaysFooterCss, height: '81px', margin: '0' }}>
         <div className="text-center p-3">
-          © 2024 - Siréus Consulting AB
+          © 2024 - React Homepage Ltd.
         </div>
       </footer>
     </div>
