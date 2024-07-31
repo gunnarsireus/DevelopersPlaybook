@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createRoot, hydrateRoot } from 'react-dom/client';
 import MainApp from './MainApp';
 
-function renderApp() {
+const renderApp = () => {
   const container = document.getElementById("react-app");
 
   if (container.hasChildNodes()) {

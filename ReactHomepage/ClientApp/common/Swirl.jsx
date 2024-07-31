@@ -1,80 +1,67 @@
-﻿import React, { Component } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import '../../wwwroot/Scripts/jquery-ui';
 import '../../wwwroot/Scripts/ui/jquery.ui.core';
 import '../../wwwroot/Scripts/ui/jquery.ui.effect-swirl';
-import '../.../../wwwroot/Content/jquery-ui.css';
+import '../../wwwroot/Content/jquery-ui.css';
 
-export default class Swirl extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            hasMounted:false
-        };
+const Swirl = (props) => {
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    doSwirl();
+    renderDialogContent();
+
+    // Indicate that the component has mounted
+    setHasMounted(true);
+
+    // This useEffect replaces both componentDidMount and componentWillReceiveProps
+    // Empty dependency array ensures it runs only once on mount
+  }, []);
+
+  useEffect(() => {
+    if (hasMounted) {
+      doSwirl();
+      renderDialogContent(props);
     }
+  }, [props]);
 
-    componentDidMount() {
-        this.DoSwirl();
-        this.renderDialogContent();
-    }
+  const runAnimate = () => {
+    $("#divWeather").css("visibility", "visible").hide().animate({ height: "show" }, 2000, 'easeOutBounce');
+  }
 
-    componentWillReceiveProps(newProps) {
-        if (this.state.hasMounted) {
-            this.DoSwirl();
-        }
-        this.setState({ hasMounted: true });
-        this.renderDialogContent(newProps);
-    }
+  const ShowText = (selector, callback) => {
+    $(selector).css("visibility", "visible").hide().fadeIn(1000, callback);
+  }
 
+  const doSwirl = () => {
+    const node = ReactDOM.findDOMNode(this);
+    const swirl = $("#divSwirl");
+    const txt = $("#divText");
+    const download = $("#divDownload");
+    const contact = $("#divContact");
+    const weather = $("#divWeather");
 
-    runAnimate() {
-        $("#divWeather").css("visibility", "visible").hide().animate({ height: "show" }, 2000, 'easeOutBounce');
-    }
+    swirl.css("visibility", "visible").hide();
+    txt.css("visibility", "hidden").show();
+    download.css("visibility", "hidden").show();
+    contact.css("visibility", "hidden").show();
+    weather.css("visibility", "hidden").show();
 
-    ShowText(selector, callback) {
-        $(selector).css("visibility", "visible").hide().fadeIn(1000, callback);
-    }
+    swirl.toggle("swirl", { spins: 6 }, 1500, () => {
+      ShowText("#divText", () => {
+        ShowText("#divDownload", () => {
+          ShowText("#divContact", runAnimate);
+        });
+      });
+    });
+  }
 
-    DoSwirl(){
-            this.node = ReactDOM.findDOMNode(this);
-            this.swirl = $("#divSwirl");
-            this.swirl.css("visibility", "visible");
-            this.swirl.css("display", "none");
-            this.txt = $("#divText");
-            this.txt.css("visibility", "hidden");
-            this.txt.css("display", "block");
-            this.download = $("#divDownload");
-            this.download.css("visibility", "hidden");
-            this.download.css("display", "block");
-            this.contact = $("#divContact");
-            this.contact.css("visibility", "hidden");
-            this.contact.css("display", "block");
-            this.weather = $("#divWeather");
-            this.weather.css("visibility", "hidden");
-            this.weather.css("display", "block");
-            var that=this;
-            this.swirl.toggle("swirl", { spins: 6 }, 1500, function() {
-                that.ShowText("#divText",
-                    function () {
-                        that.ShowText("#divDownload",
-                            function () {
-                                that.ShowText("#divContact",
-                                    function () { that.runAnimate(); });
-                            });
-                    });
-            });
-    }
+  const renderDialogContent = (props = {}) => {
+    ReactDOM.render(<div>{props.children}</div>, ReactDOM.findDOMNode(this));
+  }
 
-    renderDialogContent(props) {
-        // decide to use newProps from `componentWillReceiveProps` or to use
-        // existing props from `componentDidMount`
-        props = props || this.props;
-        ReactDOM.render(<div>{props.children}</div>, this.node);
-    }
-
-    render() {
-        // don't render anything, this is where we open the portal
-        return <div />;
-    }
+  return <div />;
 }
 
+export default Swirl;
