@@ -99,7 +99,7 @@ namespace ReactHomepage.Controllers
         private bool UserIsLoggedIn()
         {
             // Replace this with actual user authentication logic, e.g., checking JWT tokens or session data
-            return HttpContext.Session.GetString(HomeController.UserLoggedIn) == "true";
+            return HttpContext.Session.GetString(HomeController.SessionUserLoggedIn) == "true";
         }
     }
 }

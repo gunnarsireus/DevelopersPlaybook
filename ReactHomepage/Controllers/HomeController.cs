@@ -1,13 +1,20 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using ReactHomepage.Interfaces;
 using ReactHomepage.Models;
 using System.Diagnostics;
-
+using System.Threading.Tasks;
 
 namespace ReactHomepage.Controllers
 {
     public class HomeController : Controller
     {
-        public const string UserLoggedIn ="UserLoggedIn";
+        public const string SessionUserLoggedIn = "UserLoggedIn";
+        private IConfiguration Configuration { get; }
+        public HomeController(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
         public IActionResult Index() => View();
 
         public IActionResult Error()
@@ -17,14 +24,15 @@ namespace ReactHomepage.Controllers
         }
 
         [HttpPost]
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
             if (ModelState.IsValid)
             {
-                if (HttpContext.Session.MyGet<bool>(UserLoggedIn) == true)
+                bool isLoggedIn = HttpContext.Session.MyGet<bool>(SessionUserLoggedIn);
+                if (isLoggedIn)
                 {
-                    System.Threading.Thread.Sleep(500);
-                    HttpContext.Session.MySet(UserLoggedIn, false);
+                    await Task.Delay(500); // Async delay to simulate processing time
+                    HttpContext.Session.MySet(SessionUserLoggedIn, false);
                     return Json(new { success = true, text = "userLoggedOut" });
                 }
                 else
@@ -34,19 +42,19 @@ namespace ReactHomepage.Controllers
             }
             else
             {
-                return Json(new { success = false, text = "Modelstate invalid" });
+                return Json(new { success = false, text = "ModelState invalid" });
             }
         }
 
         [HttpPost]
-        public IActionResult Login([FromBody] LoginModel model)
+        public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
             if (ModelState.IsValid)
             {
-                if (model.Password == "1234")
+                if (model.Password == Configuration["Password"])
                 {
-                    System.Threading.Thread.Sleep(500);
-                    HttpContext.Session.MySet(UserLoggedIn, true);
+                    await Task.Delay(500); // Async delay to simulate processing time
+                    HttpContext.Session.MySet(SessionUserLoggedIn, true);
                     return Json(new { success = true, text = "PasswordOk" });
                 }
                 else
@@ -56,7 +64,7 @@ namespace ReactHomepage.Controllers
             }
             else
             {
-                return Json(new { success = false, text = "Modelstate invalid" });
+                return Json(new { success = false, text = "ModelState invalid" });
             }
         }
 

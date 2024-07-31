@@ -9,8 +9,8 @@ namespace ReactHomepage.Controllers
 {
     public class HandlerController : Controller
     {
-	    private const string RandomPhotoID = "RandomPhotoID";
-	    private const string PhotoID = "PhotoID";
+        private const string SessionRandomPhotoID = "RandomPhotoID";
+        private const string SessionPhotoID = "PhotoID";
         private readonly IPhotoManager _photoManager;
 
         public HandlerController(IPhotoManager photoManager)
@@ -19,66 +19,53 @@ namespace ReactHomepage.Controllers
         }
 
         // GET: /Images/
-
-        public IActionResult Index(string arg1, string arg2)  //arg1=photoId, arg2=Size
+        public IActionResult Index(string arg1, string arg2)
         {
-            PhotoSize size;
-            switch (arg2.Replace("Size=", ""))
+            PhotoSize size = arg2.Replace("Size=", "") switch
             {
-                case "S":
-                    size = PhotoSize.Small;
-                    break;
-                case "M":
-                    size = PhotoSize.Medium;
-                    break;
-                case "L":
-                    size = PhotoSize.Large;
-                    break;
-                default:
-                    size = PhotoSize.Original;
-                    break;
+                "S" => PhotoSize.Small,
+                "M" => PhotoSize.Medium,
+                "L" => PhotoSize.Large,
+                _ => PhotoSize.Original,
+            };
+
+            string photoId = arg1.Replace("PhotoID=", "");
+
+            if (photoId == "0")
+            {
+                photoId = _photoManager.GetRandomPhotoId(_photoManager.GetRandomAlbumId()).ToString();
+                HttpContext.Session.SetString(SessionRandomPhotoID, photoId);
             }
 
-		    HttpContext.Session.MySet(PhotoID, arg1.Replace("PhotoID=", ""));
-			if (arg1 == "PhotoID=0")
-            {
-                var tmpPhotoID = _photoManager.GetRandomPhotoId(_photoManager.GetRandomAlbumId());
-                arg1 = "PhotoID=" + tmpPhotoID;
-	            HttpContext.Session.MySet(PhotoID, tmpPhotoID.ToString());
-	            HttpContext.Session.MySet(RandomPhotoID, tmpPhotoID.ToString());
-            }
-            // Setup the PhotoID Parameter
+            HttpContext.Session.SetString(SessionPhotoID, photoId);
 
-            var stream = new MemoryStream();
-
-            if (arg1.Substring(0, 7) == "PhotoID")
+            using var stream = new MemoryStream();
+            if (arg1.StartsWith("PhotoID"))
             {
-                var photoId = Convert.ToInt32(arg1.Replace("PhotoID=", ""));
-	            HttpContext.Session.MySet(PhotoID, photoId.ToString());
-                _photoManager.GetPhoto(photoId, size).CopyTo(stream);
+                var parsedPhotoId = int.Parse(photoId);
+                _photoManager.GetPhoto(parsedPhotoId, size).CopyTo(stream);
             }
-            else
+            else if (arg1.StartsWith("AlbumID"))
             {
-                var albumId = Convert.ToInt32(arg1.Replace("AlbumID=", ""));
+                var albumId = int.Parse(arg1.Replace("AlbumID=", ""));
                 _photoManager.GetFirstPhoto(albumId, size).CopyTo(stream);
             }
 
-            return File(stream.GetBuffer(), "image/png");
+            return File(stream.ToArray(), "image/png");
         }
 
         public IActionResult Download(string arg1, string arg2)
         {
-	        var photoId = HttpContext.Session.MyGet<string>(PhotoID);
-			if (photoId != null)
+            var photoId = HttpContext.Session.GetString(SessionPhotoID);
+            if (string.IsNullOrEmpty(photoId))
             {
-                ViewData["PhotoID"] = photoId;
+                photoId = _photoManager.GetRandomPhotoId(_photoManager.GetRandomAlbumId()).ToString();
+                HttpContext.Session.SetString(SessionRandomPhotoID, photoId);
             }
-            else
-            {
-				HttpContext.Session.MySet(RandomPhotoID, _photoManager.GetRandomPhotoId(_photoManager.GetRandomAlbumId()).ToString());
-                ViewData["PhotoID"] = RandomPhotoID;
-            }
+
+            ViewData["PhotoID"] = photoId;
             ViewData["Size"] = "L";
+
             return View();
         }
     }

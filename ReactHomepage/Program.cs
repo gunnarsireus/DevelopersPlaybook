@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration; 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -18,6 +20,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders(); // Optionally clear default providers
 builder.Logging.AddConsole(); // Add console logging
 builder.Logging.AddDebug();   // Optionally add debug logging
+
+// Add configuration support
+var configuration = builder.Configuration;
+
+// If in development, add User Secrets
+if (builder.Environment.IsDevelopment())
+{
+    builder.Configuration.AddUserSecrets<Program>();
+}
 
 // Add services to the container.
 builder.Services.AddDistributedMemoryCache();

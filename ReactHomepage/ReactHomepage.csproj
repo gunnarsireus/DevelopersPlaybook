@@ -7,7 +7,7 @@
 		<IsPackable>false</IsPackable>
 		<SpaRoot>ClientApp\</SpaRoot>
 		<DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
-		<UserSecretsId>ee0f71ac-23c9-48f4-9418-80c17c45a9b4</UserSecretsId>
+		<UserSecretsId>24C8344F-0D82-4A87-9DBA-BDA7680F9777</UserSecretsId>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -18,6 +18,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.6.2" />
 		<PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.6.2" />
 		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.6.2" />
