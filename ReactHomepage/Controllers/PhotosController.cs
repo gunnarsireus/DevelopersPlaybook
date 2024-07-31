@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ReactHomepage.Interfaces;
+using ReactHomepage.Models;
 using Swashbuckle.AspNetCore.Annotations;
 using System.IO;
 using System.Linq;

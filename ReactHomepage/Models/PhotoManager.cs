@@ -187,49 +187,19 @@ namespace ReactHomepage.Models
 
         public void AddPhoto(int albumId, string caption, byte[] bytesOriginal)
         {
-            var db = _context.Database.GetDbConnection().ConnectionString;
-            if (db.IndexOf("Personal.db") != -1)
+            var photo = new Photo
             {
-                using (var conn = new SqliteConnection(db))
-                {
-                    using (var cmd = new SqliteCommand("INSERT INTO Photos (AlbumID, BytesOriginal, Caption, BytesFull, BytesPoster, BytesThumb) VALUES (@P1, @P2, @P3, @P4, @P5, @P6)", conn))
-                    {
-                        var parameter = new SqliteParameter("@P1", DbType.Int32) { Value = albumId };
-                        cmd.Parameters.Add(parameter);
-                        parameter = new SqliteParameter("@P2", DbType.Binary) { Value = bytesOriginal };
-                        cmd.Parameters.Add(parameter);
-                        parameter = new SqliteParameter("@P3", DbType.String) { Value = caption };
-                        cmd.Parameters.Add(parameter);
-                        parameter = new SqliteParameter("@P4", DbType.Binary) { Value = ResizeImageFile(bytesOriginal, 600) };
-                        cmd.Parameters.Add(parameter);
-                        parameter = new SqliteParameter("@P5", DbType.Binary) { Value = ResizeImageFile(bytesOriginal, 198) };
-                        cmd.Parameters.Add(parameter);
-                        parameter = new SqliteParameter("@P6", DbType.Binary) { Value = ResizeImageFile(bytesOriginal, 100) };
-                        cmd.Parameters.Add(parameter);
-                        conn.Open();
-                        cmd.ExecuteNonQuery();
-                        conn.Close();
-                    }
-                }
-            }
-            else
-            {
-                using (var connection = new SqlConnection(ConfigurationManager.ConnectionStrings["Personal"].ConnectionString))
-                {
-                    using (var command = new SqlCommand("AddPhoto", connection))
-                    {
-                        command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.Add(new SqlParameter("@AlbumID", albumId));
-                        command.Parameters.Add(new SqlParameter("@Caption", caption));
-                        command.Parameters.Add(new SqlParameter("@BytesOriginal", bytesOriginal));
-                        command.Parameters.Add(new SqlParameter("@BytesFull", ResizeImageFile(bytesOriginal, 600)));
-                        command.Parameters.Add(new SqlParameter("@BytesPoster", ResizeImageFile(bytesOriginal, 198)));
-                        command.Parameters.Add(new SqlParameter("@BytesThumb", ResizeImageFile(bytesOriginal, 100)));
-                        connection.Open();
-                        command.ExecuteNonQuery();
-                    }
-                }
-            }
+                AlbumID = albumId,
+                Caption = caption,
+                BytesOriginal = bytesOriginal,
+                BytesFull = ResizeImageFile(bytesOriginal, 600),
+                BytesPoster = ResizeImageFile(bytesOriginal, 198),
+                BytesThumb = ResizeImageFile(bytesOriginal, 100),
+                PhotoID = 0             
+            };
+
+            _context.Photos.Add(photo);
+            _context.SaveChanges();
         }
 
         public Album GetAlbum(int albumId)
