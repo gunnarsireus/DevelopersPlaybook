@@ -29,8 +29,6 @@ module.exports = (env) => {
     entry: {
       vendor: [
         './wwwroot/Content/Site.css',
-        './wwwroot/Content/jqx.base.css',
-        './wwwroot/Content/CarouselCustom.css',
         'bootstrap/dist/css/bootstrap.min.css',
         'react-datepicker/dist/react-datepicker.css',
         'bootstrap-css-only/css/bootstrap.css',

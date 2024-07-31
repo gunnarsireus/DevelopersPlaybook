@@ -81,27 +81,5 @@ namespace ReactHomepage.Controllers
             ViewData["Size"] = "L";
             return View();
         }
-
-        public IActionResult Delete(string arg1, string arg2)
-        {
-            if (HttpContext.Session.MyGet<bool>(HomeController.UserLoggedIn) == true)
-            {
-                _photoManager.DeletePhoto(int.Parse(arg1));
-                return Json(arg1);
-            }
-
-            return Json("NotOk");
-        }
-
-        public IActionResult Save(string arg1, string arg2) // arg1 = PhotoId, arg2 = Caption
-        {
-            if (HttpContext.Session.MyGet<bool>(HomeController.UserLoggedIn) == true)
-            {
-                _photoManager.EditPhoto(arg2, int.Parse(arg1));
-                return Json("ok");
-            }
-
-            return Json("NotOk");
-        }
     }
 }

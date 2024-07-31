@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
-import TextInput from '../common/TextInput';
+import FormInput from '../common/FormInput';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { userIsIdentifiedSignal } from '../Frame';
@@ -8,8 +8,7 @@ import { useUserContext } from './UserContext';
 
 const User = () => {
   const { state, dispatch, checkPasswordAsync, logOutAsync } = useUserContext();
-  const userIsIdentified = state.isIdentified;
-  const userStatus = state.status;
+  const { isIdentified, status } = state;
   const [showModal, setShowModal] = useState(true);
   const [password, setPassword] = useState('');
 
@@ -22,42 +21,53 @@ const User = () => {
   const handlePasswordChanged = (value) => setPassword(value);
 
   const handleLogInOut = async (e) => {
-    e.preventDefault();
+    if (e && e.preventDefault) {
+      e.preventDefault();
+    }
+
     try {
-      if (userIsIdentified) {
+      if (isIdentified) {
         const response = await logOutAsync();
-        if (response === 'userLoggedOut' || response === 'userAlreadyLoggedOut') {
+        if (['userLoggedOut', 'userAlreadyLoggedOut'].includes(response)) {
           dispatch({ type: 'SET_IS_IDENTIFIED', payload: false });
-          setTimeout(() => { userIsIdentifiedSignal.dispatch(false); }, 100);
+          setTimeout(() => userIsIdentifiedSignal.dispatch(false), 100);
           window.history.back();
         }
       } else {
         const response = await checkPasswordAsync(password);
         if (response === 'PasswordOk') {
           dispatch({ type: 'SET_IS_IDENTIFIED', payload: true });
-          setTimeout(() => { userIsIdentifiedSignal.dispatch(true); }, 100);
+          setTimeout(() => userIsIdentifiedSignal.dispatch(true), 100);
           window.history.back();
         }
       }
     } catch (error) {
-      console.log("error: ", error);
+      console.error("Error:", error);
     }
   }
 
   return (
     <Modal.Dialog
-      size='sm'
-      show={showModal.toString()}
+      size="sm"
+      show={showModal}
+      onHide={handleClose}
       aria-labelledby="example-modal-sizes-title-sm"
       centered
     >
-      <Modal.Header closeButton onHide={handleClose}>
+      <Modal.Header>
         <Modal.Title>
-          {!userIsIdentified ?
-            (<TextInput text={password} placeholder='Password' onTextChanged={handlePasswordChanged} preText={'log in'} type={'password'} />)
-            :
-            (<strong>Logging out</strong>)
-          }
+          {!isIdentified ? (
+            <FormInput
+              text={password}
+              type="password"
+              placeholder="Password"
+              preText="log in"
+              onTextChanged={handlePasswordChanged}
+              onEnter={handleLogInOut}
+            />
+          ) : (
+            <strong>Log out</strong>
+          )}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
@@ -65,10 +75,15 @@ const User = () => {
           Cancel
         </Button>
         <Button variant="primary" onClick={handleLogInOut}>
-          {userIsIdentified ? ('Log out') : ('Log in')}
+          {isIdentified ? 'Log out' : 'Log in'}
         </Button>
         <Button style={{ border: 'none', background: 'none', color: 'black' }}>
-          <FontAwesomeIcon icon={faSpinner} size={'2x'} spin style={userStatus === 'idle' ? { opacity: '0' } : { opacity: '1' }} />
+          <FontAwesomeIcon
+            icon={faSpinner}
+            size="2x"
+            spin
+            style={{ opacity: status === 'idle' ? '0' : '1' }}
+          />
         </Button>
       </Modal.Body>
     </Modal.Dialog>

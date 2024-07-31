@@ -1,4 +1,5 @@
 ﻿import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import PhotoFrame from './PhotoFrame';
 import FileUploadFunction from './FileUploadFunction';
 import TextAreaInput from '../common/TextAreaInput';
@@ -11,23 +12,25 @@ import { getPhotosFromServerAsync, deletePhotoOnServerAsync, updatePhotoCaptionO
 import { useUserContext } from '../user/UserContext';
 import { Link } from 'react-router-dom';
 
-const Photos = (props) => {
-  const { state: userState } = useUserContext();
+const Photos = () => {
+  const { albumId, albumCaption } = useParams();
+
   const [photos, setPhotos] = useState([]);
-  const [captions, setcaptions] = useState([]);
+  const [captions, setCaptions] = useState([]);
   const [showDeleteConfirmationModals, setShowDeleteConfirmationModals] = useState([]);
   const [status, setStatus] = useState('idle');
-  const [albumId] = useState(props.match.params.albumId);
-  const [albumCaption] = useState(props.match.params.albumCaption);
   const [photoCaption, setPhotoCaption] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(-1);
 
+  const { state: userState } = useUserContext();
+
   useEffect(() => {
+    console.log("Photos")
     const fetchPhotos = async () => {
       setStatus('loading');
       const response = await getPhotosFromServerAsync(albumId);
       setPhotos(response.data);
-      setcaptions(response.data.map(p => p.caption));
+      setCaptions(response.data.map(p => p.caption));
       setShowDeleteConfirmationModals(response.data.map(() => false));
       setStatus('idle');
     };
@@ -37,7 +40,7 @@ const Photos = (props) => {
   const handlePhotoAdded = async () => {
     const response = await getPhotosFromServerAsync(albumId);
     setPhotos(response.data);
-    setcaptions(response.data.map(p => p.caption));
+    setCaptions(response.data.map(p => p.caption));
     setShowDeleteConfirmationModals(response.data.map(() => false));
     setPhotoCaption('');
   };
@@ -46,20 +49,20 @@ const Photos = (props) => {
 
   const handleDelete = async (index) => {
     setStatus('loading');
-    await deletePhotoOnServerAsync(photos[index].photoID, albumId);
+    await deletePhotoOnServerAsync(photos[index].photoID);
     const updatedPhotos = photos.filter((_, idx) => idx !== index);
     setPhotos(updatedPhotos);
-    setcaptions(updatedPhotos.map(p => p.caption));
+    setCaptions(updatedPhotos.map(p => p.caption));
     setShowDeleteConfirmationModals(updatedPhotos.map(() => false));
     setStatus('idle');
   };
 
-  const handleToggle = (index) => {
+  const toggleDelete = (index) => {
     const updatedModals = showDeleteConfirmationModals.map((el, idx) => idx === index ? !el : el);
     setShowDeleteConfirmationModals(updatedModals);
   };
 
-  const handleSave = async (index) => {
+  const handleUpdate = async (index) => {
     setSelectedIndex(index);
     setStatus('loading');
     await updatePhotoCaptionOnServerAsync(photos[index].photoID, captions[index]);
@@ -77,7 +80,7 @@ const Photos = (props) => {
 
   const fileUploadElement = (
     <td key="0">
-      <TextAreaInput text={photoCaption} placeholder={'Ange rubrik'} onTextChanged={handleNewCaptionChanged} />
+      <TextAreaInput text={photoCaption} placeholder={'Enter caption'} onTextChanged={handleNewCaptionChanged} />
       <PhotoFrame defaultImage={true}>
         <FileUploadFunction albumId={albumId} caption={photoCaption} onPhotoAdded={handlePhotoAdded} />
       </PhotoFrame>
@@ -89,10 +92,10 @@ const Photos = (props) => {
       <td key={photo.photoID}>
         <div>
           {userState.isIdentified ? (
-            <TextAreaInput text={captions[index]} placeholder={'Ange rubrik'} onTextChanged={(value) => {
-              const updatedcaptions = [...captions];
-              updatedcaptions[index] = value;
-              setcaptions(updatedcaptions);
+            <TextAreaInput text={captions[index]} placeholder={'Enter caption'} onTextChanged={(value) => {
+              const updatedCaptions = [...captions];
+              updatedCaptions[index] = value;
+              setCaptions(updatedCaptions);
             }} />
           ) : (
             captions[index]
@@ -107,13 +110,13 @@ const Photos = (props) => {
         </PhotoFrame>
         {userState.isIdentified ? (
           <div>
-            <a onClick={() => handleToggle(index)} style={{ marginRight: '10px' }}>
+            <a onClick={() => toggleDelete(index)} style={{ marginRight: '10px' }}>
               <FontAwesomeIcon icon={faTrash} size={'1x'} />
             </a>
             <div style={{ display: 'inline-block' }}>
-              <DeleteConfirmation showModal={showDeleteConfirmationModals[index]} confirmModal={() => handleDelete(index)} hideModal={() => handleToggle(index)} message={`Vill du verkligen ta bort ${photo.caption}?`} />
+              <DeleteConfirmation showModal={showDeleteConfirmationModals[index]} confirmModal={() => handleDelete(index)} hideModal={() => toggleDelete(index)} message={`Do you want to remove ${photo.caption}?`} />
             </div>
-            <a onClick={() => handleSave(index)} style={{ marginLeft: '10px' }}>
+            <a onClick={() => handleUpdate(index)} style={{ marginLeft: '10px' }}>
               <FontAwesomeIcon icon={faSave} size={'1x'} />
             </a>
             <FontAwesomeIcon icon={faSpinner} size={'2x'} spin style={(status === 'loading' && index === selectedIndex) ? { opacity: '1' } : { opacity: '0' }} />

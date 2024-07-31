@@ -15,30 +15,30 @@ const Details = () => {
     const fetchPhotos = async (photoId) => {
       if (parseInt(photoId) === 0) {
         try {
-          const response = await apiClient.getHelper('/Details/GetRandomPhotoId');
+          const response = await apiClient.getHelper('api/details/random');
           const randomPhotoId = parseInt(response);
           fetchRandomPhotoDetails(randomPhotoId);
         } catch (error) {
-          alert('Kan ej kontakta server ' + error);
+          alert('Could not contact server ' + error);
         }
       } else {
         try {
-          const response = await apiClient.getHelper(`/Details/GetPhotos/${albumIdParsed}`);
+          const response = await apiClient.getHelper(`/api/details/${albumIdParsed}`);
           setPhotos(response);
           setPhotoId(Number(photoId));
         } catch (error) {
-          alert('Kan ej kontakta server ' + error);
+          alert('Could not contact server ' + error);
         }
       }
     };
 
     const fetchRandomPhotoDetails = async (photoId) => {
       try {
-        const response = await apiClient.getHelper('/Details/GetPhotos/0');
+        const response = await apiClient.getHelper('api/details/0');
         setPhotos(response);
         setPhotoId(Number(photoId));
       } catch (error) {
-        alert('Kan ej kontakta server ' + error);
+        alert('Could not contact server ' + error);
       }
     };
 

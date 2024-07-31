@@ -34,8 +34,7 @@ export const UserProvider = ({ children }) => {
         dispatch({ type: 'SET_IS_IDENTIFIED', payload: true });
         return 'PasswordOk';
       } else {
-        const oo = String.fromCharCode(246);
-        const message = 'Felaktigt l' + oo + 'senord, f' + oo + 'rs' + oo + 'k igen.';
+        const message = 'Wrong password, please try again.';
         alert(message);
         return 'PasswordIncorrect';
       }

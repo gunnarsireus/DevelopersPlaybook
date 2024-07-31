@@ -1,17 +1,59 @@
-﻿import React from 'react';
+﻿import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Animate } from "react-simple-animate";
 import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash, faSave } from '@fortawesome/free-solid-svg-icons';
+import TextAreaInput from '../common/TextAreaInput';
 
-const AlbumFrame = ({ AlbumID, Caption, PhotoCount, ItemCount }) => {
-  const animationProps = {
-    startStyle: { opacity: 0 },
-    endStyle: { opacity: 1 },
-    durationSeconds: 1,
-  };
+const AlbumFrame = ({ AlbumID, Caption, PhotoCount, ItemCount, userState, handleDelete, handleUpdate, handleAdd }) => {
+  const [caption, setCaption] = useState(Caption);
+
+  const isAddNewAlbum = AlbumID === 0;
+  const isUpdateOldAlbum = userState.isIdentified && !isAddNewAlbum;
+  const isDisabledForAddAndUpdate = caption.trim() === '' ;
+  const isDisabledForDelete = PhotoCount > 0;
 
   return (
     <td className="item">
+      {isUpdateOldAlbum ? (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'black' }}>
+          <FontAwesomeIcon
+            icon={faSave}
+            onClick={() => !isDisabledForAddAndUpdate && handleUpdate(AlbumID, caption)}
+            style={{
+              fontSize: '2em',
+              margin: '0 50px 0 100px',
+              cursor: isDisabledForAddAndUpdate ? 'not-allowed' : 'pointer',
+              opacity: isDisabledForAddAndUpdate ? 0.5 : 1 // Visual indication of being disabled
+            }}
+          />
+          <FontAwesomeIcon
+            icon={faTrash}
+            onClick={() => !isDisabledForDelete && handleDelete(AlbumID)}
+            style={{
+              fontSize: '2em',
+              margin: '0 150px 0 30px',
+              cursor: isDisabledForDelete ? 'not-allowed' : 'pointer',
+              opacity: isDisabledForDelete ? 0.5 : 1 // Visual indication of being disabled
+            }}
+          />
+        </div>
+      ) : null}
+      {isAddNewAlbum ? (
+        <div style={{ alignItems: 'center', color: 'black' }}>
+          <FontAwesomeIcon
+            icon={faSave}
+            onClick={() => !isDisabledForAddAndUpdate && handleAdd(caption)}
+            style={{
+              fontSize: '2em',
+              margin: '0 50px 0 100px',
+              cursor: isDisabledForAddAndUpdate ? 'not-allowed' : 'pointer',
+              opacity: isDisabledForAddAndUpdate ? 0.5 : 1 // Visual indication of being disabled
+            }}
+          />
+        </div>
+      ) : null}
       <table cellPadding="0" cellSpacing="0" className="album-frame">
         <tbody>
           <tr>
@@ -34,10 +76,14 @@ const AlbumFrame = ({ AlbumID, Caption, PhotoCount, ItemCount }) => {
               <img alt="" src="/Content/images/album-l2.gif" style={{ maxHeight: '100%', maxWidth: '100%', verticalAlign: 'top' }} />
             </td>
             <td colSpan="3" rowSpan="3">
-              <Animate delaySeconds={ItemCount / 4} play {...animationProps}>
-                <Link to={`/photos/${AlbumID}/${Caption}`}>
-                  <img src={`/Handler/Index/AlbumID=${AlbumID}/Size=M`} className="photo_198" style={{ border: '4px solid white', maxHeight: '100%', maxWidth: '100%' }} alt={`Sample Photo from Album Number ${AlbumID}`} />
-                </Link>
+              <Animate delaySeconds={ItemCount / 4} play={{ start: { opacity: 0 }, end: { opacity: 1 }, durationSeconds: 1 }}>
+                {isAddNewAlbum ? (
+                  <img src="/Content/images/default-image-small.png" className="photo_198" style={{ border: '4px solid white', maxHeight: '100%', maxWidth: '100%' }} alt={`Sample Photo from Album`} />
+                ) : (
+                  <Link to={`/photos/${AlbumID}/${caption}`}>
+                    <img src={`/Handler/Index/AlbumID=${AlbumID}/Size=M`} className="photo_198" style={{ border: '4px solid white', maxHeight: '100%', maxWidth: '100%' }} alt={`Sample Photo from Album Number ${AlbumID}`} />
+                  </Link>
+                )}
               </Animate>
             </td>
             <td className="mtp----x">
@@ -73,9 +119,20 @@ const AlbumFrame = ({ AlbumID, Caption, PhotoCount, ItemCount }) => {
           </tr>
         </tbody>
       </table>
-      <h4>
-        <Link to={`/photos/${AlbumID}`}>{Caption}</Link>
-      </h4>
+      {isUpdateOldAlbum ? (
+        <h4>
+          <div style={{ color: 'rgb(152, 0, 0)' }}><TextAreaInput text={caption} placeholder="Enter caption" onTextChanged={(value) => setCaption(value)} /></div>
+        </h4>
+      ) : (
+        <h4>
+          <Link to={`/photos/${AlbumID}/${Caption}`}>{Caption}</Link>
+        </h4>
+      )}
+      {isAddNewAlbum ? (
+        <h4>
+          <div style={{ color: 'rgb(152, 0, 0)' }}><TextAreaInput text={caption} placeholder="Enter caption" onTextChanged={(value) => setCaption(value)} /></div>
+        </h4>
+      ) : null}
       <div>{PhotoCount} images</div>
     </td>
   );
@@ -86,12 +143,10 @@ AlbumFrame.propTypes = {
   Caption: PropTypes.string.isRequired,
   PhotoCount: PropTypes.number.isRequired,
   ItemCount: PropTypes.number.isRequired,
-};
-
-AlbumFrame.defaultProps = {
-  AlbumID: 0,
-  PhotoCount: 0,
-  Caption: '',
+  userState: PropTypes.object.isRequired,
+  handleDelete: PropTypes.func.isRequired,
+  handleUpdate: PropTypes.func.isRequired,
+  handleAdd: PropTypes.func.isRequired,
 };
 
 export default AlbumFrame;

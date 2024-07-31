@@ -1,20 +1,29 @@
 ﻿import React from "react";
-const TextInput = (props) => {
-  const handleChange = e => {
-    props.onTextChanged(e.target.value);
+
+const TextInput = ({ text, type, placeholder, preText, onTextChanged, onEnter }) => {
+  const handleChange = (e) => {
+    onTextChanged(e.target.value);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      onEnter();
+    }
   };
 
   return (
-    <div style={{ display: 'inline' }}><strong>{props.preText}&nbsp;</strong>
+    <div style={{ display: 'inline' }}>
+      <strong>{preText}&nbsp;</strong>
       <input
-        type={props.type}
+        type={type}
         style={{ textAlign: "center" }}
-        value={props.text}
-        placeholder={props.placeholder}
+        value={text}
+        placeholder={placeholder}
         onChange={handleChange}
+        onKeyDown={handleKeyDown}
       />
-     </div>
+    </div>
   );
-}
+};
 
-export default TextInput
+export default TextInput;

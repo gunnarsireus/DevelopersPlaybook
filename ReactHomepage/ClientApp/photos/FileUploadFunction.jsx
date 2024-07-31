@@ -51,7 +51,7 @@ const FileUploadFunction = (props) => {
     formData.append("AlbumId", props.albumId);
     formData.append("Caption", props.caption);
 
-    await apiClient.postImageHelper('/Photos/AddPhoto', formData).then((response) => {
+    await apiClient.postImageHelper('api/photos/add/', formData).then((response) => {
       props.onPhotoAdded(response);
       setImage({
         preview: "",

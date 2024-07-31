@@ -1,4 +1,6 @@
-﻿namespace ReactHomepage.ViewModels
+﻿using System.Collections.Generic;
+
+namespace ReactHomepage.ViewModels
 {
     public class AlbumViewModel
     {

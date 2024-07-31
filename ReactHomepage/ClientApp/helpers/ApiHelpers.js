@@ -9,7 +9,7 @@ const defaultHeaders = {
   "Accept-Language": "*"
 };
 
-function getQueryString(query) {
+const getQueryString = (query) => {
   if (!query) return "";
 
   const stringifiedQuery = queryString.stringify(query);
@@ -17,8 +17,9 @@ function getQueryString(query) {
   return `?${stringifiedQuery}`;
 }
 
-export async function getHelper(url, query) {
+export const getHelper = async (url, query) => {
   url = `${url}${getQueryString(query)}`;
+
   const response = await fetch(url, {
     headers: defaultHeaders,
     method: "GET"
@@ -29,7 +30,7 @@ export async function getHelper(url, query) {
   return response.json();
 }
 
-export async function postHelper(url, request, query) {
+export const postHelper = async (url, request, query) => {
   url = `${url}${getQueryString(query)}`;
 
   const response = await fetch(url, {
@@ -43,7 +44,7 @@ export async function postHelper(url, request, query) {
   return response.json();
 }
 
-export async function postImageHelper(url, formData, query) {
+export const postImageHelper = async (url, formData, query) => {
   url = `${url}${getQueryString(query)}`;
 
   const response = await fetch(url, {
@@ -59,7 +60,7 @@ export async function postImageHelper(url, formData, query) {
   return response.json();
 }
 
-export async function putHelper(url, request, query) {
+export const putHelper = async (url, request, query) => {
   url = `${url}${getQueryString(query)}`;
 
   const response = await fetch(url, {
@@ -73,7 +74,7 @@ export async function putHelper(url, request, query) {
   return response.json();
 }
 
-export async function patchHelper(url, request, query) {
+export const patchHelper = async (url, request, query) => {
   url = `${url}${getQueryString(query)}`;
 
   const response = await fetch(url, {
@@ -87,7 +88,7 @@ export async function patchHelper(url, request, query) {
   return response.json();
 }
 
-export async function deleteHelper(url, query) {
+export const deleteHelper = async (url, query) => {
   url = `${url}${getQueryString(query)}`;
 
   const response = await fetch(url, {

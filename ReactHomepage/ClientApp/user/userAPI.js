@@ -1,7 +1,7 @@
 // A mock function to mimic making an async request for data
 import * as apiClient from "../helpers/ApiHelpers";
 
-export async function checkPasswordOnServerAsync(password) {
+export const checkPasswordOnServerAsync = async (password) => {
   return new Promise((resolve, reject) =>
     apiClient.postHelper('/Home/Login', { Password: password })
       .then((response) => {
@@ -11,7 +11,7 @@ export async function checkPasswordOnServerAsync(password) {
       }))
 }
 
-export async function logOutUserAsync() {
+export const logOutUserAsync = async () => {
   return new Promise((resolve, reject) =>
     apiClient.postHelper('/Home/Logout')
       .then((response) => {

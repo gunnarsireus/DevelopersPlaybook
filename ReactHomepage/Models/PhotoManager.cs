@@ -90,7 +90,7 @@ namespace ReactHomepage.Models
             }
         }
 
-        public void EditPhoto(string caption, int photoId)
+        public void UpdatePhoto(string caption, int photoId)
         {
             var db = _context.Database.GetDbConnection().ConnectionString;
             if (db.IndexOf("Personal.db") != -1)
@@ -124,14 +124,15 @@ namespace ReactHomepage.Models
         public Stream GetFirstPhoto(int albumId, PhotoSize size)
         {
             byte[] result = null;
-            var photos = GetPhotos(albumId);
+            var photos = GetPhotosByAlbumId(albumId);
 
+            // Check if the album has photos
             if (photos == null || photos.Count == 0)
             {
-                // Log the issue or handle it as needed
-                return null;
+                return GetDefaultPhotoStream(PhotoSize.Small);
             }
 
+            // Get the appropriate photo based on the requested size
             switch (size)
             {
                 case PhotoSize.Large:
@@ -158,6 +159,26 @@ namespace ReactHomepage.Models
 
             return new MemoryStream(result);
         }
+
+        private Stream GetDefaultPhotoStream(PhotoSize size)
+        {
+            // Path to the default image, adjust this to your actual default image path
+            string defaultImagePath = size switch
+            {
+                PhotoSize.Large => "wwwroot/Content/images/default-image-large.png",
+                PhotoSize.Medium => "wwwroot/Content/images/default-image-medium.png",
+                PhotoSize.Original => "wwwroot/Content/images/default-image.png",
+                PhotoSize.Small => "wwwroot/Content/images/default-image-small.png",
+                _ => "wwwroot/Content/images/default-image-small.png" // Fallback to a generic default image
+            };
+
+            // Load the default image as a byte array
+            byte[] defaultImageBytes = File.ReadAllBytes(defaultImagePath);
+
+            // Return the image as a stream
+            return new MemoryStream(defaultImageBytes);
+        }
+
 
         public Photo GetPhoto(int photoId)
         {
@@ -216,7 +237,35 @@ namespace ReactHomepage.Models
             return _context.Albums.Single(o => o.AlbumID == albumId);
         }
 
-        public List<Photo> GetPhotos(int albumId)
+        public int DeleteAlbum(int albumId)
+        {
+            var album = _context.Albums.Single(o => o.AlbumID == albumId);
+            _context.Albums.Remove(album);
+            return _context.SaveChanges();
+        }
+
+        public AlbumViewModel AddAlbum(string caption)
+        {
+            var album = new Album()
+            {
+                Caption = caption,
+                IsPublic = true,
+            };
+
+            _context.Albums.Add(album);
+            _context.SaveChanges();
+            return GetAlbumsWithPhotoCount().Single(a => a.AlbumID == album.AlbumID);
+        }
+
+        public int UpdateAlbum(string caption, int albumId)
+        {
+            var album = _context.Albums.Single(o => o.AlbumID == albumId);
+            album.Caption = caption;
+            _context.Albums.Update(album);
+            return _context.SaveChanges();
+        }
+
+        public List<Photo> GetPhotosByAlbumId(int albumId)
         {
             return _context.Photos.Where(o => o.AlbumID == albumId).ToList();
         }
@@ -249,14 +298,14 @@ namespace ReactHomepage.Models
 
         public int GetRandomAlbumId()
         {
-            var albumsList = _context.Albums.ToList();
+            var albumsList = GetAlbumsWithPhotoCount().Where(a => a.PhotoCount > 0).ToList();
             RandomAlbumID = albumsList[Random100000(albumsList.Count)].AlbumID;
             return RandomAlbumID;
         }
 
         public int GetRandomPhotoId(int albumId)
         {
-            var photoList = GetPhotos(albumId);
+            var photoList = GetPhotosByAlbumId(albumId);
             return photoList[Random100000(photoList.Count)].PhotoID;
         }
 
@@ -265,19 +314,15 @@ namespace ReactHomepage.Models
             using (Image oldImage = Image.FromStream(new MemoryStream(imageFile)))
             {
                 var newSize = CalculateDimensions(oldImage.Size, targetSize);
-                using (var newImage = new Bitmap(newSize.Width, newSize.Height, PixelFormat.Format24bppRgb))
-                {
-                    using (var canvas = Graphics.FromImage(newImage))
-                    {
-                        canvas.SmoothingMode = SmoothingMode.AntiAlias;
-                        canvas.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                        canvas.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                        canvas.DrawImage(oldImage, new Rectangle(new Point(0, 0), newSize));
-                        var m = new MemoryStream();
-                        newImage.Save(m, ImageFormat.Jpeg);
-                        return m.GetBuffer();
-                    }
-                }
+                using var newImage = new Bitmap(newSize.Width, newSize.Height, PixelFormat.Format24bppRgb);
+                using var canvas = Graphics.FromImage(newImage);
+                canvas.SmoothingMode = SmoothingMode.AntiAlias;
+                canvas.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                canvas.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                canvas.DrawImage(oldImage, new Rectangle(new Point(0, 0), newSize));
+                var m = new MemoryStream();
+                newImage.Save(m, ImageFormat.Jpeg);
+                return m.GetBuffer();
             }
         }
 

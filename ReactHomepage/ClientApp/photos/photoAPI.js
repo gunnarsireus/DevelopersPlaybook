@@ -3,7 +3,7 @@ import * as apiClient from "../helpers/ApiHelpers";
 
 export async function getPhotosFromServerAsync(albumId) {
   return new Promise((resolve, reject) =>
-    apiClient.postHelper('/Photos/Index/' + albumId)
+    apiClient.getHelper('/api/photos/album/' + albumId)
       .then((response) => {
         return resolve({ data: response });
       }).catch((error) => {
@@ -11,9 +11,9 @@ export async function getPhotosFromServerAsync(albumId) {
       }))
 }
 
-export async function deletePhotoOnServerAsync(photoId, albumId) {
+export async function deletePhotoOnServerAsync(photoId) {
   return new Promise((resolve, reject) =>
-    apiClient.getHelper('/Handler/Delete/' + photoId + '/' + albumId)
+    apiClient.deleteHelper('/api/photos/delete/' + photoId)
       .then((response) => {
         return resolve({ data: response });
       }).catch((error) => {
@@ -23,7 +23,7 @@ export async function deletePhotoOnServerAsync(photoId, albumId) {
 
 export async function updatePhotoCaptionOnServerAsync(photoId, caption) {
   return new Promise((resolve, reject) =>
-    apiClient.getHelper('/Handler/Save/' + photoId + '/' + caption)
+    apiClient.putHelper('/api/photos/update/' + photoId, caption)
       .then((response) => {
         return resolve({ data: response });
       }).catch((error) => {

@@ -43,7 +43,7 @@ namespace ReactHomepage.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (model.Password == "0000")
+                if (model.Password == "1234")
                 {
                     System.Threading.Thread.Sleep(500);
                     HttpContext.Session.MySet(UserLoggedIn, true);
