@@ -9,7 +9,7 @@ import { Animate } from "react-simple-animate";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faSave, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { getPhotosFromServerAsync, deletePhotoOnServerAsync, updatePhotoCaptionOnServerAsync } from './photoAPI';
-import { useUserContext } from '../user/UserContext';
+import { useSessionUserContext } from '../user/SessionUserContext';
 import { Link } from 'react-router-dom';
 
 const Photos = () => {
@@ -22,7 +22,7 @@ const Photos = () => {
   const [photoCaption, setPhotoCaption] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(-1);
 
-  const { state: userState } = useUserContext();
+  const { state: userState } = useSessionUserContext();
 
   useEffect(() => {
     console.log("Photos")

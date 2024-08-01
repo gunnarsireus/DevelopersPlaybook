@@ -4,7 +4,7 @@ import { Row, Col } from 'react-bootstrap';
 import AlbumFrame from './AlbumFrame';
 import * as apiClient from "../helpers/ApiHelpers";
 import { routeChangedSignal } from '../Frame';
-import { useUserContext } from '../user/UserContext';
+import { useSessionUserContext } from '../user/SessionUserContext';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -12,7 +12,7 @@ const Albums = () => {
   const [albums, setAlbums] = useState([]);
   const [showProgress, setShowProgress] = useState(false);
   const history = useHistory();
-  const { state: userState } = useUserContext();
+  const { state: userState } = useSessionUserContext();
 
   useEffect(() => {
     setShowProgress(true);

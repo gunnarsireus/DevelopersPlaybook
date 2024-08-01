@@ -1,13 +1,13 @@
-﻿import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { Switch, Route, BrowserRouter, StaticRouter } from 'react-router-dom';
 import Frame from './Frame';
 import Home from './home/Home';
 import Albums from './albums/Albums';
 import Photos from './photos/Photos';
-import User from './user/User';
+import SessionUser from './user/SessionUser';
 import Details from './details/Details';
 import NotFound from './NotFound';
-import { UserProvider } from './user/UserContext';
+import { SessionUserProvider } from './user/SessionUserContext';
 
 const MainApp = (props) => {
   const [isClient, setIsClient] = useState(false);
@@ -21,7 +21,7 @@ const MainApp = (props) => {
   const routerProps = !isClient ? { location: props.location, context: {} } : {};
 
   return (
-    <UserProvider>
+    <SessionUserProvider>
       <Router {...routerProps}>
         <Frame>
           <Switch>
@@ -29,12 +29,12 @@ const MainApp = (props) => {
             <Route path="/albums" component={!isClient ? NotFound : Albums} />
             <Route path="/photos/:albumId/:albumCaption" render={!isClient ? NotFound : (props) => <Photos {...props} />} />
             <Route path="/details/:photoId/:albumId/:albumCaption" component={!isClient ? NotFound : Details} />
-            <Route path="/user" component={!isClient ? NotFound : User} />
+            <Route path="/user" component={!isClient ? NotFound : SessionUser} />
             <Route path="*" component={NotFound} />
           </Switch>
         </Frame>
       </Router>
-    </UserProvider>
+    </SessionUserProvider>
   );
 };
 

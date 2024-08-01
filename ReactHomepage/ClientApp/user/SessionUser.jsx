@@ -4,10 +4,10 @@ import FormInput from '../common/FormInput';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { userIsIdentifiedSignal } from '../Frame';
-import { useUserContext } from './UserContext';
+import { useSessionUserContext } from './SessionUserContext';
 
-const User = () => {
-  const { state, dispatch, checkPasswordAsync, logOutAsync } = useUserContext();
+const SessionUser = () => {
+  const { state, dispatch, checkPasswordAsync, logOutAsync } = useSessionUserContext();
   const { isIdentified, status } = state;
   const [showModal, setShowModal] = useState(true);
   const [password, setPassword] = useState('');
@@ -90,4 +90,4 @@ const User = () => {
   );
 }
 
-export default User;
+export default SessionUser;
