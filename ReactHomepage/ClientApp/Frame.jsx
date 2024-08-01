@@ -34,10 +34,7 @@ const Frame = (props) => {
 
       const routeMapping = {
         home: menuRefs.homeLi,
-        sql: menuRefs.sqlLi,
-        ltb: menuRefs.ltbLi,
         albums: menuRefs.albumsLi,
-        ordtest: menuRefs.ordtestLi,
         user: menuRefs.userLi
       };
 
