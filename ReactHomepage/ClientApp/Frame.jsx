@@ -6,7 +6,6 @@ import ReactSvgIcon from "./common/ReactSvgIcon";
 import MiniSignal from 'mini-signals';
 
 export const routeChangedSignal = new MiniSignal();
-export const userIsIdentifiedSignal = new MiniSignal();
 
 const Frame = (props) => {
   const [dayNumber, setDayNumber] = useState(new Date().getDay() % 12);
@@ -56,7 +55,6 @@ const Frame = (props) => {
 
     // Store the bindings returned by add method
     const routeChangedBinding = routeChangedSignal.add(routeChangedHandler);
-    const userIsIdentifiedBinding = userIsIdentifiedSignal.add(loginChangedHandler);
 
     if (elCollapseButton.current) {
       elCollapseButton.current.addEventListener('click', toggleSidebar);
@@ -67,7 +65,6 @@ const Frame = (props) => {
     return () => {
       // Use the stored bindings to remove the listeners
       routeChangedBinding.detach();
-      userIsIdentifiedBinding.detach();
 
       if (elCollapseButton.current) {
         elCollapseButton.current.removeEventListener('click', toggleSidebar);

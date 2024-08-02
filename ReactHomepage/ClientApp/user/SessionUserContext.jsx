@@ -45,7 +45,6 @@ export const SessionUserProvider = ({ children }) => {
     try {
       const response = await checkPasswordOnServerAsync(password);
       if (response.data.token) {
-        localStorage.setItem('jwtToken', response.data.token); // Store token
         dispatch({ type: SET_IS_IDENTIFIED, payload: true });
         dispatch({ type: SET_TOKEN, payload: response.data.token });
         return 'PasswordOk';
@@ -65,7 +64,6 @@ export const SessionUserProvider = ({ children }) => {
     try {
       const response = await logOutUserAsync();
       if (response.data === 'userLoggedOut' || response.data === 'userAlreadyLoggedOut') {
-        localStorage.removeItem('jwtToken'); 
         dispatch({ type: SET_IS_IDENTIFIED, payload: false });
         dispatch({ type: SET_TOKEN, payload: null });
         return 'userLoggedOut';
