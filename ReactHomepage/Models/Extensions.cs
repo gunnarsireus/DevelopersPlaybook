@@ -6,11 +6,11 @@ namespace ReactHomepage.Models
 {
 	public static class SessionExtensions
 	{
-		public static void MySet<T>(this ISession session, string key, T value)
+		public static void SetValue<T>(this ISession session, string key, T value)
 		{
 			session.SetString(key, JsonConvert.SerializeObject(value));
 		}
-		public static T MyGet<T>(this ISession session, string key)
+		public static T GetValue<T>(this ISession session, string key)
 		{
 			var value = session.GetString(key);
 			return value == null ? default(T) : JsonConvert.DeserializeObject<T>(value);

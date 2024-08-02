@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ReactHomepage.Interfaces;
-using ReactHomepage.Models;
 using Swashbuckle.AspNetCore.Annotations;
 using System.IO;
 using System.Linq;
@@ -39,54 +39,37 @@ namespace ReactHomepage.Controllers
         }
 
         [HttpPost("add")]
+        [Authorize]
         [SwaggerOperation(Summary = "Add photo", Description = "Add photo")]
         public ActionResult Add([FromForm] FormData formData)
         {
-            if (UserIsLoggedIn())
+            using (var ms = new MemoryStream())
             {
-                using (var ms = new MemoryStream())
-                {
-                    formData.Image.CopyTo(ms);
-                    var fileBytes = ms.ToArray();
-                    _photoManager.AddPhoto(formData.AlbumId, formData.Caption, fileBytes);
-                }
-
-                return Ok(new { message = "Photo added successfully." });
+                formData.Image.CopyTo(ms);
+                var fileBytes = ms.ToArray();
+                _photoManager.AddPhoto(formData.AlbumId, formData.Caption, fileBytes);
             }
 
-            return Unauthorized(new { message = "User not logged in." });
+            return Ok(new { message = "Photo added successfully." });
+
         }
 
         [HttpPut("update/{id}")]
+        [Authorize]
         [SwaggerOperation(Summary = "Update photo", Description = "Update photo")]
         public ActionResult Update(int id, [FromBody] string caption)
         {
-            if (UserIsLoggedIn())
-            {
-                _photoManager.UpdatePhoto(caption, id);
-                return Ok(new { message = "Photo updated successfully." });
-            }
-
-            return Unauthorized(new { message = "User not logged in." });
+            _photoManager.UpdatePhoto(caption, id);
+            return Ok(new { message = "Photo updated successfully." });
         }
 
         [HttpDelete("delete/{id}")]
+        [Authorize]
         [SwaggerOperation(Summary = "Delete photo", Description = "Delete photo")]
         public IActionResult Delete(int id)
         {
-            if (UserIsLoggedIn())
-            {
-                _photoManager.DeletePhoto(id);
-                return Ok(new { message = "Photo deleted successfully." });
-            }
-
-            return Unauthorized(new { message = "User not logged in." });
-        }
-
-        private bool UserIsLoggedIn()
-        {
-            // Replace this with actual user authentication logic, e.g., checking JWT tokens or session data
-            return HttpContext.Session.GetString(HomeController.SessionUserLoggedIn) == "true";
+            _photoManager.DeletePhoto(id);
+            return Ok(new { message = "Photo deleted successfully." });
         }
     }
 

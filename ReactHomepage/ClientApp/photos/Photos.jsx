@@ -28,7 +28,7 @@ const Photos = () => {
     console.log("Photos")
     const fetchPhotos = async () => {
       setStatus('loading');
-      const response = await getPhotosFromServerAsync(albumId);
+      const response = await getPhotosFromServerAsync(albumId, userState.token);
       setPhotos(response.data);
       setCaptions(response.data.map(p => p.caption));
       setShowDeleteConfirmationModals(response.data.map(() => false));
@@ -38,7 +38,7 @@ const Photos = () => {
   }, [albumId]);
 
   const handlePhotoAdded = async () => {
-    const response = await getPhotosFromServerAsync(albumId);
+    const response = await getPhotosFromServerAsync(albumId, userState.token);
     setPhotos(response.data);
     setCaptions(response.data.map(p => p.caption));
     setShowDeleteConfirmationModals(response.data.map(() => false));
@@ -49,7 +49,7 @@ const Photos = () => {
 
   const handleDelete = async (index) => {
     setStatus('loading');
-    await deletePhotoOnServerAsync(photos[index].photoID);
+    await deletePhotoOnServerAsync(photos[index].photoID, userState.token);
     const updatedPhotos = photos.filter((_, idx) => idx !== index);
     setPhotos(updatedPhotos);
     setCaptions(updatedPhotos.map(p => p.caption));
@@ -65,7 +65,7 @@ const Photos = () => {
   const handleUpdate = async (index) => {
     setSelectedIndex(index);
     setStatus('loading');
-    await updatePhotoCaptionOnServerAsync(photos[index].photoID, captions[index]);
+    await updatePhotoCaptionOnServerAsync(photos[index].photoID, captions[index], userState.token);
     setStatus('idle');
   };
 

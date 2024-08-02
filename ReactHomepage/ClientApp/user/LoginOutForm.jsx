@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import FormInput from '../common/FormInput';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -6,17 +6,25 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { userIsIdentifiedSignal } from '../Frame';
 import { useSessionUserContext } from './SessionUserContext';
 
-const SessionUser = () => {
+const LoginOutForm = () => {
   const { state, dispatch, checkPasswordAsync, logOutAsync } = useSessionUserContext();
   const { isIdentified, status } = state;
   const [showModal, setShowModal] = useState(true);
   const [password, setPassword] = useState('');
 
+  useEffect(() => {
+    // Check if user is already logged in (e.g., check token in localStorage)
+    const token = localStorage.getItem('jwtToken');
+    if (token) {
+      dispatch({ type: 'SET_IS_IDENTIFIED', payload: true });
+    }
+  }, [dispatch]);
+
   const handleClose = () => {
     setShowModal(false);
     setPassword('');
     window.history.back();
-  }
+  };
 
   const handlePasswordChanged = (value) => setPassword(value);
 
@@ -28,23 +36,24 @@ const SessionUser = () => {
     try {
       if (isIdentified) {
         const response = await logOutAsync();
-        if (['userLoggedOut', 'userAlreadyLoggedOut'].includes(response)) {
-          dispatch({ type: 'SET_IS_IDENTIFIED', payload: false });
+        if (response === 'userLoggedOut') {
           setTimeout(() => userIsIdentifiedSignal.dispatch(false), 100);
           window.history.back();
         }
       } else {
         const response = await checkPasswordAsync(password);
-        if (response === 'PasswordOk') {
-          dispatch({ type: 'SET_IS_IDENTIFIED', payload: true });
+        if (response === 'PasswordOk') { 
           setTimeout(() => userIsIdentifiedSignal.dispatch(true), 100);
           window.history.back();
+        } else {
+          // Handle case where response is not a token
+          console.error('Login failed or invalid response');
         }
       }
     } catch (error) {
       console.error("Error:", error);
     }
-  }
+  };
 
   return (
     <Modal.Dialog
@@ -88,6 +97,6 @@ const SessionUser = () => {
       </Modal.Body>
     </Modal.Dialog>
   );
-}
+};
 
-export default SessionUser;
+export default LoginOutForm;

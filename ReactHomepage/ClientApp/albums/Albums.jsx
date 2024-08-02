@@ -32,7 +32,7 @@ const Albums = () => {
   const getAlbumsWithPhotoCount = async (url) => {
     setShowProgress(true);
     try {
-      const response = await apiClient.getHelper(url);
+      const response = await apiClient.getHelper(url, userState.token);
       setAlbums([...response]);
 
       // Check if no empty albums exist after setting the state
@@ -49,7 +49,7 @@ const Albums = () => {
 
   const handleDelete = async (albumId) => {
     setShowProgress(true);
-    await apiClient.deleteHelper(`/api/albums/delete/${albumId}`);
+    await apiClient.deleteHelper(`/api/albums/delete/${albumId}`, userState.token);
     const updatedAlbums = albums.filter(album => album.albumID !== albumId)
     setAlbums(updatedAlbums);
     if (userState.isIdentified && noEmptyAlbumsExists(updatedAlbums)) {
@@ -61,14 +61,14 @@ const Albums = () => {
 
   const handleUpdate = async (albumId, newCaption) => {
     setShowProgress(true);
-    await apiClient.putHelper(`/api/albums/Update/${albumId}`, newCaption);
+    await apiClient.putHelper(`/api/albums/Update/${albumId}`, newCaption, userState.token);
     setAlbums(albums.map(album => album.albumID === albumId ? { ...album, caption: newCaption } : album));
     setShowProgress(false);
   };
 
   const handleAdd = async (caption) => {
     setShowProgress(true);
-    const newAlbum = await apiClient.postHelper(`/api/albums/add`, caption );
+    const newAlbum = await apiClient.postHelper(`/api/albums/add`, caption, userState.token);
     setAlbums([...albums.filter(album => album.albumID !== 0), newAlbum]);
     setShowProgress(false);
   };

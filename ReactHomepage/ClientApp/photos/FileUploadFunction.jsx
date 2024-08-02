@@ -3,10 +3,12 @@ import DragAndDrop from './DragAndDrop';
 import * as apiClient from "../helpers/ApiHelpers";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSave, faTimes, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { useSessionUserContext } from '../user/SessionUserContext';
 
 const FileUploadFunction = (props) => {
   const [image, setImage] = useState({ preview: "", raw: "" });
   const [status, setStatus] = useState('idle');
+  const { state: userState } = useSessionUserContext();
 
   const reducer = (state, action) => {
     switch (action.type) {
@@ -51,7 +53,7 @@ const FileUploadFunction = (props) => {
     formData.append("AlbumId", props.albumId);
     formData.append("Caption", props.caption);
 
-    await apiClient.postImageHelper('api/photos/add/', formData).then((response) => {
+    await apiClient.postImageHelper('api/photos/add/', formData, userState.token).then((response) => {
       props.onPhotoAdded(response);
       setImage({
         preview: "",

@@ -4,7 +4,7 @@ import Frame from './Frame';
 import Home from './home/Home';
 import Albums from './albums/Albums';
 import Photos from './photos/Photos';
-import SessionUser from './user/SessionUser';
+import LoginOutForm from './user/LoginOutForm';
 import Details from './details/Details';
 import NotFound from './NotFound';
 import { SessionUserProvider } from './user/SessionUserContext';
@@ -29,7 +29,7 @@ const MainApp = (props) => {
             <Route path="/albums" component={!isClient ? NotFound : Albums} />
             <Route path="/photos/:albumId/:albumCaption" render={!isClient ? NotFound : (props) => <Photos {...props} />} />
             <Route path="/details/:photoId/:albumId/:albumCaption" component={!isClient ? NotFound : Details} />
-            <Route path="/user" component={!isClient ? NotFound : SessionUser} />
+            <Route path="/user" component={!isClient ? NotFound : LoginOutForm} />
             <Route path="*" component={NotFound} />
           </Switch>
         </Frame>

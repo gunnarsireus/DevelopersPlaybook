@@ -1,27 +1,13 @@
-let queryString;
-import('query-string').then(module => {
-  queryString = module.default;
-});
-
-const defaultHeaders = {
+const defaultHeaders = (token) => ({
   "Content-Type": "application/json",
   Accept: "application/json",
-  "Accept-Language": "*"
-};
+  "Accept-Language": "*",
+  "Authorization": `Bearer ${token}`
+});
 
-const getQueryString = (query) => {
-  if (!query) return "";
-
-  const stringifiedQuery = queryString.stringify(query);
-
-  return `?${stringifiedQuery}`;
-}
-
-export const getHelper = async (url, query) => {
-  url = `${url}${getQueryString(query)}`;
-
+export const getHelper = async (url, token) => {
   const response = await fetch(url, {
-    headers: defaultHeaders,
+    headers: defaultHeaders(token),
     method: "GET"
   });
 
@@ -30,11 +16,9 @@ export const getHelper = async (url, query) => {
   return response.json();
 }
 
-export const postHelper = async (url, request, query) => {
-  url = `${url}${getQueryString(query)}`;
-
+export const postHelper = async (url, request, token) => {
   const response = await fetch(url, {
-    headers: defaultHeaders,
+    headers: defaultHeaders(token),
     method: "POST",
     body: request ? JSON.stringify(request) : null
   });
@@ -44,12 +28,11 @@ export const postHelper = async (url, request, query) => {
   return response.json();
 }
 
-export const postImageHelper = async (url, formData, query) => {
-  url = `${url}${getQueryString(query)}`;
-
+export const postImageHelper = async (url, formData, token) => {
   const response = await fetch(url, {
     headers: {
-      Accept: 'application/json'
+      Accept: 'application/json',
+      "Authorization": `Bearer ${token}`
     },
     method: "POST",
     body: formData
@@ -60,11 +43,9 @@ export const postImageHelper = async (url, formData, query) => {
   return response.json();
 }
 
-export const putHelper = async (url, request, query) => {
-  url = `${url}${getQueryString(query)}`;
-
+export const putHelper = async (url, request, token) => {
   const response = await fetch(url, {
-    headers: defaultHeaders,
+    headers: defaultHeaders(token),
     method: "PUT",
     body: request ? JSON.stringify(request) : null
   });
@@ -74,11 +55,9 @@ export const putHelper = async (url, request, query) => {
   return response.json();
 }
 
-export const patchHelper = async (url, request, query) => {
-  url = `${url}${getQueryString(query)}`;
-
+export const patchHelper = async (url, request, token) => {
   const response = await fetch(url, {
-    headers: defaultHeaders,
+    headers: defaultHeaders(token),
     method: "PATCH",
     body: request ? JSON.stringify(request) : null
   });
@@ -88,11 +67,9 @@ export const patchHelper = async (url, request, query) => {
   return response.json();
 }
 
-export const deleteHelper = async (url, query) => {
-  url = `${url}${getQueryString(query)}`;
-
+export const deleteHelper = async (url, token) => {
   const response = await fetch(url, {
-    headers: defaultHeaders,
+    headers: defaultHeaders(token),
     method: "DELETE"
   });
 

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer } from 'react';
-import { checkPasswordOnServerAsync, logOutUserAsync } from './userAPI';
+import { checkPasswordOnServerAsync, logOutUserAsync } from './userAPI'; // These functions should be updated to work with JWT
 
 // Create a context for the session user state
 const SessionUserContext = createContext();
@@ -8,11 +8,13 @@ const SessionUserContext = createContext();
 const initialState = {
   isIdentified: false,
   status: 'idle',
+  token: null, // To store JWT token
 };
 
 // Define action types for better maintainability
 const SET_IS_IDENTIFIED = 'SET_IS_IDENTIFIED';
 const SET_STATUS = 'SET_STATUS';
+const SET_TOKEN = 'SET_TOKEN';
 
 // Reducer function to manage the session user state
 const userReducer = (state, action) => {
@@ -21,19 +23,20 @@ const userReducer = (state, action) => {
       return { ...state, isIdentified: action.payload };
     case SET_STATUS:
       return { ...state, status: action.payload };
+    case SET_TOKEN:
+      return { ...state, token: action.payload };
     default:
       return state;
   }
 };
 
-// Utility function to handle errors and reset status
+// Handle async errors
 const handleAsyncError = (error, dispatch) => {
   console.error(error);
   dispatch({ type: SET_STATUS, payload: 'idle' });
   throw error;
 };
 
-// Provider component to supply session user state and actions
 export const SessionUserProvider = ({ children }) => {
   const [state, dispatch] = useReducer(userReducer, initialState);
 
@@ -41,15 +44,17 @@ export const SessionUserProvider = ({ children }) => {
     dispatch({ type: SET_STATUS, payload: 'loading' });
     try {
       const response = await checkPasswordOnServerAsync(password);
-      if (response.data === 'PasswordOk') {
+      if (response.data.token) {
+        localStorage.setItem('jwtToken', response.data.token); // Store token
         dispatch({ type: SET_IS_IDENTIFIED, payload: true });
+        dispatch({ type: SET_TOKEN, payload: response.data.token });
         return 'PasswordOk';
       } else {
         alert('Wrong password, please try again.');
         return 'PasswordIncorrect';
       }
     } catch (error) {
-      handleAsyncError('Error checking password:', error, dispatch);
+      handleAsyncError(error, dispatch);
     } finally {
       dispatch({ type: SET_STATUS, payload: 'idle' });
     }
@@ -60,14 +65,16 @@ export const SessionUserProvider = ({ children }) => {
     try {
       const response = await logOutUserAsync();
       if (response.data === 'userLoggedOut' || response.data === 'userAlreadyLoggedOut') {
+        localStorage.removeItem('jwtToken'); 
         dispatch({ type: SET_IS_IDENTIFIED, payload: false });
-        return response.data;
+        dispatch({ type: SET_TOKEN, payload: null });
+        return 'userLoggedOut';
       } else {
         alert(`Unexpected server response: ${response.data}`);
         return 'Error';
       }
     } catch (error) {
-      handleAsyncError('Error logging out:', error, dispatch);
+      handleAsyncError(error, dispatch);
     } finally {
       dispatch({ type: SET_STATUS, payload: 'idle' });
     }

@@ -26,7 +26,7 @@ namespace ReactHomepage.Controllers
             if (id == 0)
             {
                 var photoList = new List<Photo>();
-                var randomPhotoID = HttpContext.Session.MyGet<string>(RandomPhotoID);
+                var randomPhotoID = HttpContext.Session.GetValue<string>(RandomPhotoID);
                 if (randomPhotoID != null && int.TryParse(randomPhotoID, out int randomPhotoId))
                 {
                     var tmpAlbumId = _photoManager.GetPhoto(randomPhotoId).AlbumID;
@@ -46,7 +46,7 @@ namespace ReactHomepage.Controllers
         [SwaggerOperation(Summary = "Get a random photo", Description = "Get a random photo")]
         public IActionResult GetRandomPhotoID()
         {
-            var randomPhotoID = HttpContext.Session.MyGet<string>(RandomPhotoID);
+            var randomPhotoID = HttpContext.Session.GetValue<string>(RandomPhotoID);
             if (randomPhotoID != null && int.TryParse(randomPhotoID, out int idd))
             {
                 return Ok(idd);

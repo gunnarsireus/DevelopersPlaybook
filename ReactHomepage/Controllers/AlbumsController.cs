@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ReactHomepage.Interfaces;
@@ -37,69 +37,51 @@ namespace ReactHomepage.Controllers
         }
 
         [HttpPost("add")]
+        [Authorize]
         [SwaggerOperation(Summary = "Add album", Description = "Add album")]
         public IActionResult Add([FromBody] string caption)
         {
-            if (UserIsLoggedIn())
+            var albumViewModel = _photoManager.AddAlbum(caption);
+            if (albumViewModel != null)
             {
-                var albumViewModel = _photoManager.AddAlbum(caption);
-                if (albumViewModel != null)
-                {
-                    return Ok(albumViewModel);
-                }
-                else
-                {
-                    return BadRequest(new { success = false, message = "Failed to create album" });
-                }
+                return Ok(albumViewModel);
             }
-
-            return Unauthorized(new { message = "User not logged in." });
+            else
+            {
+                return BadRequest(new { success = false, message = "Failed to create album" });
+            }
         }
 
         [HttpPut("update/{id}")]
+        [Authorize]
         [SwaggerOperation(Summary = "Update album", Description = "Update album")]
         public IActionResult Update(int id, [FromBody] string caption)
         {
-            if (UserIsLoggedIn())
+            var response = _photoManager.UpdateAlbum(caption, id);
+            if (response > 0)
             {
-                var response = _photoManager.UpdateAlbum(caption, id);
-                if (response > 0)
-                {
-                    return Ok(new { success = true, data = caption });
-                }
-                else
-                {
-                    return BadRequest(new { success = false, message = "Failed to create album" });
-                }
+                return Ok(new { success = true, data = caption });
             }
-
-            return Unauthorized(new { message = "User not logged in." });
+            else
+            {
+                return BadRequest(new { success = false, message = "Failed to create album" });
+            }
         }
 
         [HttpDelete("delete/{id}")]
+        [Authorize]
         [SwaggerOperation(Summary = "Delete album", Description = "Delete album")]
         public IActionResult Delete(int id)
         {
-            if (UserIsLoggedIn())
+            int response = _photoManager.DeleteAlbum(id);
+            if (response > 0)
             {
-                int response = _photoManager.DeleteAlbum(id);
-                if (response > 0)
-                {
-                    return Ok(new { success = true, message = "Album deleted successfully" });
-                }
-                else
-                {
-                    return NotFound(new { success = false, message = "Album not found" });
-                }
+                return Ok(new { success = true, message = "Album deleted successfully" });
             }
-
-             return Unauthorized(new { message = "User not logged in." });
-        }
-
-        private bool UserIsLoggedIn()
-        {
-            // Replace this with actual user authentication logic, e.g., checking JWT tokens or session data
-            return HttpContext.Session.GetString(HomeController.SessionUserLoggedIn) == "true";
+            else
+            {
+                return NotFound(new { success = false, message = "Album not found" });
+            }
         }
     }
 }
