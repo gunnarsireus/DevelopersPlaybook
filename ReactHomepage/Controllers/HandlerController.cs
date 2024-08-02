@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using ReactHomepage.Interfaces;
 using ReactHomepage.Models;
-using System;
 using System.IO;
 
 namespace ReactHomepage.Controllers

@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using ReactHomepage.Models;
+﻿using ReactHomepage.Models;
 using ReactHomepage.ViewModels;
+using System.Collections.Generic;
+using System.IO;
 
 namespace ReactHomepage.Interfaces
 {

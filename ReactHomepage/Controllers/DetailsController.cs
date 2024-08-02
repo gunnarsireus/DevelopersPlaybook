@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using ReactHomepage.Interfaces;
 using ReactHomepage.Models;
-using System.Collections.Generic;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ReactHomepage.Controllers

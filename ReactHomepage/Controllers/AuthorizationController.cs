@@ -68,6 +68,7 @@ namespace ReactHomepage.Controllers
                         signingCredentials: creds);
 
                     HttpContext.Session.SetValue<bool>(SessionUserLoggedIn, true);
+                    
                     return Ok(new
                     {
                         token = new JwtSecurityTokenHandler().WriteToken(token)
