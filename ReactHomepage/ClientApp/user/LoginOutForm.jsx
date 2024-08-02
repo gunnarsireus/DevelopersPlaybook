@@ -6,7 +6,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { useSessionUserContext } from './SessionUserContext';
 
 const LoginOutForm = () => {
-  const { state, dispatch, checkPasswordAsync, logOutAsync } = useSessionUserContext();
+  const { state, checkPasswordAsync, logOutAsync } = useSessionUserContext();
   const { isIdentified, status } = state;
   const [showModal, setShowModal] = useState(true);
   const [password, setPassword] = useState('');
