@@ -115,7 +115,7 @@ builder.Services.AddScoped<IPhotoManager, PhotoManager>();
 
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "SireusCore", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "ReactHomepage", Version = "v1" });
     c.DocumentFilter<CustomDocumentFilter>();  // Register the custom document filter
 
     // Add the JWT bearer token authentication
@@ -185,7 +185,7 @@ app.UseSwagger();
 
 app.UseSwaggerUI(c =>
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "SireusCore V1");
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "ReactHomepage V1");
     c.RoutePrefix = "swagger";
 });
 
