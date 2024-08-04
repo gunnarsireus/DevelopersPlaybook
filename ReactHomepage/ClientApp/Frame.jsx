@@ -14,7 +14,6 @@ const Frame = (props) => {
   const [todaysHeaderCss, setTodaysHeaderCss] = useState(getCss('Header', dayNumber));
   const [todaysFooterCss, setTodaysFooterCss] = useState(getCss('Footer', dayNumber));
 
-  const [userIsAuthorized, setUserIsAuthorized] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const elCollapseButton = useRef(null);
@@ -40,10 +39,6 @@ const Frame = (props) => {
       if (routeMapping[route] && routeMapping[route].current) {
         routeMapping[route].current.children[0].classList.add("active");
       }
-    };
-
-    const loginChangedHandler = (isAuthorized) => {
-      setUserIsAuthorized(isAuthorized);
     };
 
     const handleResize = () => {
