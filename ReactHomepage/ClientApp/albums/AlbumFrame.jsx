@@ -10,7 +10,7 @@ const AlbumFrame = ({ AlbumID, Caption, PhotoCount, ItemCount, userState, handle
   const [caption, setCaption] = useState(Caption);
 
   const isAddNewAlbum = AlbumID === 0;
-  const isUpdateOldAlbum = userState.isIdentified && !isAddNewAlbum;
+  const isUpdateOldAlbum = userState.isAuthorized && !isAddNewAlbum;
   const isDisabledForAddAndUpdate = caption.trim() === '' ;
   const isDisabledForDelete = PhotoCount > 0;
 

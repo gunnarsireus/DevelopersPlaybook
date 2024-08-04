@@ -14,7 +14,7 @@ const Frame = (props) => {
   const [todaysHeaderCss, setTodaysHeaderCss] = useState(getCss('Header', dayNumber));
   const [todaysFooterCss, setTodaysFooterCss] = useState(getCss('Footer', dayNumber));
 
-  const [userIsIdentified, setUserIsIdentified] = useState(false);
+  const [userIsAuthorized, setUserIsAuthorized] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const elCollapseButton = useRef(null);
@@ -42,8 +42,8 @@ const Frame = (props) => {
       }
     };
 
-    const loginChangedHandler = (isIdentified) => {
-      setUserIsIdentified(isIdentified);
+    const loginChangedHandler = (isAuthorized) => {
+      setUserIsAuthorized(isAuthorized);
     };
 
     const handleResize = () => {

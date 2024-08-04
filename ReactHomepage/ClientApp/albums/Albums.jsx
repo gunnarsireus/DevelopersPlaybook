@@ -23,7 +23,7 @@ const Albums = () => {
 
   useEffect(() => {
     getAlbumsWithPhotoCount('api/albums');
-  }, [userState.isIdentified]);
+  }, [userState.isAuthorized]);
 
   const noEmptyAlbumsExists = (albums) => {
     return albums.every(album => album.photoCount > 0);
@@ -36,7 +36,7 @@ const Albums = () => {
       setAlbums([...response]);
 
       // Check if no empty albums exist after setting the state
-      if (userState.isIdentified && noEmptyAlbumsExists(response)) {
+      if (userState.isAuthorized && noEmptyAlbumsExists(response)) {
         const album = { albumID: 0, photoCount: 0, caption: '', isPublic: true };
         setAlbums(prevAlbums => [...prevAlbums, album]);
       }
@@ -52,7 +52,7 @@ const Albums = () => {
     await apiClient.deleteHelper(`/api/albums/delete/${albumId}`, userState.token);
     const updatedAlbums = albums.filter(album => album.albumID !== albumId)
     setAlbums(updatedAlbums);
-    if (userState.isIdentified && noEmptyAlbumsExists(updatedAlbums)) {
+    if (userState.isAuthorized && noEmptyAlbumsExists(updatedAlbums)) {
       const album = { albumID: 0, photoCount: 0, caption: '', isPublic: true };
       setAlbums(prevAlbums => [...prevAlbums, album]);
     }

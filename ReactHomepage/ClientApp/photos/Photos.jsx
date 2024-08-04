@@ -91,7 +91,7 @@ const Photos = () => {
     const element = (
       <td key={photo.photoID}>
         <div>
-          {userState.isIdentified ? (
+          {userState.isAuthorized ? (
             <TextAreaInput text={captions[index]} placeholder={'Enter caption'} onTextChanged={(value) => {
               const updatedCaptions = [...captions];
               updatedCaptions[index] = value;
@@ -108,7 +108,7 @@ const Photos = () => {
             </Link>
           </Animate>
         </PhotoFrame>
-        {userState.isIdentified ? (
+        {userState.isAuthorized ? (
           <div>
             <a onClick={() => toggleDelete(index)} style={{ marginRight: '10px' }}>
               <FontAwesomeIcon icon={faTrash} size={'1x'} />
@@ -133,12 +133,12 @@ const Photos = () => {
 
   if (photos.length % 5 === 0) {
     rows.push(<tr key="0_">{cols}</tr>);
-    if (userState.isIdentified) {
+    if (userState.isAuthorized) {
       cols = [fileUploadElement];
       rows.push(<tr key="00_">{cols}</tr>);
     }
   } else {
-    if (userState.isIdentified) {
+    if (userState.isAuthorized) {
       cols.push(fileUploadElement);
     }
     rows.push(<tr key="0_">{cols}</tr>);

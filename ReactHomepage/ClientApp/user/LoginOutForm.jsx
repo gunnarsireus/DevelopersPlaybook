@@ -7,7 +7,7 @@ import { useSessionUserContext } from './SessionUserContext';
 
 const LoginOutForm = () => {
   const { state, checkPasswordAsync, logOutAsync } = useSessionUserContext();
-  const { isIdentified, status } = state;
+  const { isAuthorized, status } = state;
   const [showModal, setShowModal] = useState(true);
   const [password, setPassword] = useState('');
 
@@ -25,7 +25,7 @@ const LoginOutForm = () => {
     }
 
     try {
-      if (isIdentified) {
+      if (isAuthorized) {
         const response = await logOutAsync();
         if (response === 'userLoggedOut') {
           window.history.back();
@@ -54,7 +54,7 @@ const LoginOutForm = () => {
     >
       <Modal.Header>
         <Modal.Title>
-          {!isIdentified ? (
+          {!isAuthorized ? (
             <FormInput
               text={password}
               type="password"
@@ -73,7 +73,7 @@ const LoginOutForm = () => {
           Cancel
         </Button>
         <Button variant="primary" onClick={handleLogInOut}>
-          {isIdentified ? 'Log out' : 'Log in'}
+          {isAuthorized ? 'Log out' : 'Log in'}
         </Button>
         <Button style={{ border: 'none', background: 'none', color: 'black' }}>
           <FontAwesomeIcon
