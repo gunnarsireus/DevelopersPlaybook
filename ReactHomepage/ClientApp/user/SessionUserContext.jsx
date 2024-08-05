@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useReducer } from 'react';
-import { checkPasswordOnServerAsync, logOutUserAsync } from './userAPI'; 
+import { checkPasswordOnServerAsync, logOutUserAsync } from './userAPI';
+import { useGlobalState, useGlobalDispatch } from '../GlobalState';
 
 // Create a context for the session user state
 const SessionUserContext = createContext();
@@ -7,22 +8,18 @@ const SessionUserContext = createContext();
 // Define the initial state of the session user
 const initialState = {
   isAuthorized: false,
-  status: 'idle',
   token: null, // To store JWT token
 };
 
 // Define action types for better maintainability
 const SET_IS_AUTHORIZED = 'SET_IS_AUTHORIZED';
-const SET_STATUS = 'SET_STATUS';
 const SET_TOKEN = 'SET_TOKEN';
 
 // Reducer function to manage the session user state
-const userReducer = (state, action) => {
+const sessionUserReducer = (state, action) => {
   switch (action.type) {
     case SET_IS_AUTHORIZED:
       return { ...state, isAuthorized: action.payload };
-    case SET_STATUS:
-      return { ...state, status: action.payload };
     case SET_TOKEN:
       return { ...state, token: action.payload };
     default:
@@ -30,18 +27,12 @@ const userReducer = (state, action) => {
   }
 };
 
-// Handle async errors
-const handleAsyncError = (error, dispatch) => {
-  console.error(error);
-  dispatch({ type: SET_STATUS, payload: 'idle' });
-  throw error;
-};
-
 export const SessionUserProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(userReducer, initialState);
+  const [state, dispatch] = useReducer(sessionUserReducer, initialState);
+  const globalDispatch = useGlobalDispatch();
 
   const checkPasswordAsync = async (password) => {
-    dispatch({ type: SET_STATUS, payload: 'loading' });
+    globalDispatch({ type: 'SET_LOADING', payload: true });
     try {
       const response = await checkPasswordOnServerAsync(password);
       if (response.data.token) {
@@ -53,14 +44,15 @@ export const SessionUserProvider = ({ children }) => {
         return 'PasswordIncorrect';
       }
     } catch (error) {
-      handleAsyncError(error, dispatch);
+      console.error(error);
+      throw error;
     } finally {
-      dispatch({ type: SET_STATUS, payload: 'idle' });
+      globalDispatch({ type: 'SET_LOADING', payload: false });
     }
   };
 
   const logOutAsync = async () => {
-    dispatch({ type: SET_STATUS, payload: 'loading' });
+    globalDispatch({ type: 'SET_LOADING', payload: true });
     try {
       const response = await logOutUserAsync();
       if (response.data === 'userLoggedOut' || response.data === 'userAlreadyLoggedOut') {
@@ -72,9 +64,10 @@ export const SessionUserProvider = ({ children }) => {
         return 'Error';
       }
     } catch (error) {
-      handleAsyncError(error, dispatch);
+      console.error(error);
+      throw error;
     } finally {
-      dispatch({ type: SET_STATUS, payload: 'idle' });
+      globalDispatch({ type: 'SET_LOADING', payload: false });
     }
   };
 

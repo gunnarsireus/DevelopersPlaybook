@@ -8,6 +8,7 @@ import LoginOutForm from './user/LoginOutForm';
 import Details from './details/Details';
 import NotFound from './NotFound';
 import { SessionUserProvider } from './user/SessionUserContext';
+import { GlobalProvider } from './GlobalState';
 
 const MainApp = (props) => {
   const [isClient, setIsClient] = useState(false);
@@ -21,20 +22,22 @@ const MainApp = (props) => {
   const routerProps = !isClient ? { location: props.location, context: {} } : {};
 
   return (
-    <SessionUserProvider>
-      <Router {...routerProps}>
-        <Frame>
-          <Switch>
-            <Route exact path="/" component={Home} />
-            <Route path="/albums" component={!isClient ? NotFound : Albums} />
-            <Route path="/photos/:albumId/:albumCaption" render={!isClient ? NotFound : (props) => <Photos {...props} />} />
-            <Route path="/details/:photoId/:albumId/:albumCaption" component={!isClient ? NotFound : Details} />
-            <Route path="/user" component={!isClient ? NotFound : LoginOutForm} />
-            <Route path="*" component={NotFound} />
-          </Switch>
-        </Frame>
-      </Router>
-    </SessionUserProvider>
+    <GlobalProvider>
+      <SessionUserProvider>
+        <Router {...routerProps}>
+          <Frame>
+            <Switch>
+              <Route exact path="/" component={Home} />
+              <Route path="/albums" component={!isClient ? NotFound : Albums} />
+              <Route path="/photos/:albumId/:albumCaption" render={!isClient ? NotFound : (props) => <Photos {...props} />} />
+              <Route path="/details/:photoId/:albumId/:albumCaption" component={!isClient ? NotFound : Details} />
+              <Route path="/user" component={!isClient ? NotFound : LoginOutForm} />
+              <Route path="*" component={NotFound} />
+            </Switch>
+          </Frame>
+        </Router>
+      </SessionUserProvider>
+    </GlobalProvider>
   );
 };
 

@@ -4,11 +4,13 @@ import * as apiClient from "../helpers/ApiHelpers";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSave, faTimes, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { useSessionUserContext } from '../user/SessionUserContext';
+import { useGlobalState, useGlobalDispatch } from '../GlobalState';
 
 const FileUploadFunction = (props) => {
   const [image, setImage] = useState({ preview: "", raw: "" });
-  const [status, setStatus] = useState('idle');
+  const [state, globalState] = useGlobalState();
   const { state: userState } = useSessionUserContext();
+  const globalDispatch = useGlobalDispatch();
 
   const reducer = (state, action) => {
     switch (action.type) {
@@ -47,7 +49,7 @@ const FileUploadFunction = (props) => {
 
   const handleUpload = async e => {
     e.preventDefault();
-    setStatus('loading');
+    globalDispatch({ type: 'SET_LOADING', payload: true });
     const formData = new FormData();
     formData.append("Image", image.raw);
     formData.append("AlbumId", props.albumId);
@@ -59,9 +61,9 @@ const FileUploadFunction = (props) => {
         preview: "",
         raw: ""
       });
-      setStatus('idle');
+      globalDispatch({ type: 'SET_LOADING', payload: false });
     }).catch((response) => {
-      setStatus('idle');
+      globalDispatch({ type: 'SET_LOADING', payload: false });
       alert('Ingen kontakt med server: ', response);
     });
   };
@@ -101,7 +103,7 @@ const FileUploadFunction = (props) => {
               <button onClick={handleUpload}>
                 <FontAwesomeIcon icon={faSave} size={'2x'} />
               </button>
-              <FontAwesomeIcon icon={faSpinner} size={'2x'} spin style={(status === 'loading') ? { opacity: '1' } : { opacity: '0' }} />
+              <FontAwesomeIcon icon={faSpinner} size={'2x'} spin style={globalState.loading ? { opacity: '1' } : { opacity: '0' }} />
               <button onClick={handleCancel}>
                 <FontAwesomeIcon icon={faTimes} size={'2x'} />
               </button>

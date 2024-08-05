@@ -4,10 +4,13 @@ import FormInput from '../common/FormInput';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { useSessionUserContext } from './SessionUserContext';
+import { useGlobalState, useGlobalDispatch } from '../GlobalState';
 
 const LoginOutForm = () => {
   const { state, checkPasswordAsync, logOutAsync } = useSessionUserContext();
-  const { isAuthorized, status } = state;
+  const globalState = useGlobalState();
+  const globalDispatch = useGlobalDispatch();
+  const { isAuthorized } = state;
   const [showModal, setShowModal] = useState(true);
   const [password, setPassword] = useState('');
 
@@ -25,6 +28,7 @@ const LoginOutForm = () => {
     }
 
     try {
+      globalDispatch({ type: 'SET_LOADING', payload: true });
       if (isAuthorized) {
         const response = await logOutAsync();
         if (response === 'userLoggedOut') {
@@ -32,7 +36,7 @@ const LoginOutForm = () => {
         }
       } else {
         const response = await checkPasswordAsync(password);
-        if (response === 'PasswordOk') { 
+        if (response === 'PasswordOk') {
           window.history.back();
         } else {
           // Handle case where response is not a token
@@ -41,8 +45,10 @@ const LoginOutForm = () => {
       }
     } catch (error) {
       console.error("Error:", error);
-    }
-  };
+    } finally {
+    globalDispatch({ type: 'SET_LOADING', payload: false });
+  }
+};
 
   return (
     <Modal.Dialog
@@ -80,7 +86,7 @@ const LoginOutForm = () => {
             icon={faSpinner}
             size="2x"
             spin
-            style={{ opacity: status === 'idle' ? '0' : '1' }}
+            style={{ opacity: globalState.loading ? '1' : '0' }}
           />
         </Button>
       </Modal.Body>
