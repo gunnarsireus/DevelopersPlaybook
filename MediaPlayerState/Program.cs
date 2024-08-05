@@ -121,7 +121,7 @@ namespace MediaPlayerState
             return _currentState.GetType().Name;
         }
 
-        public List<string> GetValidCommands()
+        public List<string> GetValidCommandsByCurrentState()
         {
             return _currentState.GetValidStates();
         }
@@ -137,7 +137,7 @@ namespace MediaPlayerState
             while (userInput != "exit")
             {
                 Console.WriteLine($"\nCurrent state: {player.GetCurrentState()}");
-                List<string> validCommands = player.GetValidCommands();
+                List<string> validCommands = player.GetValidCommandsByCurrentState();
                 Console.WriteLine("Available commands: " + string.Join(", ", validCommands));
                 Console.WriteLine("Enter a command:");
                 userInput = Console.ReadLine().ToLower();

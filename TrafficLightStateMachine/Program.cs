@@ -72,12 +72,12 @@ public class TrafficLightStateMachine
         }
     }
 
-    public void Request()
+    public void WriteCurrentState()
     {
         Console.WriteLine($"Current state: {currentState}");
     }
 
-    public List<StateTransition> GetAllowedTransitions()
+    public List<StateTransition> GetAllowedTransitionsByCurrentState()
     {
         return allowedTransitions[currentState].Keys.ToList();
     }
@@ -90,8 +90,8 @@ public class TrafficLightStateMachine
 
             while (true)
             {
-                trafficLight.Request();
-                var allowedTransitions = trafficLight.GetAllowedTransitions();
+                trafficLight.WriteCurrentState();
+                var allowedTransitions = trafficLight.GetAllowedTransitionsByCurrentState();
 
                 if (allowedTransitions.Count == 0)
                 {
