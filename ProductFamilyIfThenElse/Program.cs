@@ -1,78 +1,86 @@
-﻿using System;
+﻿using System.ComponentModel;
+using System.Reflection;
+
 namespace ProductFamilyIfThenElse;
+
+enum ProductState
+{
+    [Description("Editing not started")]
+    NotStarted,
+    [Description("Editing started")]
+    Editing,
+    [Description("Editing finished")]
+    EditingDone
+}
+
+enum ProductFamilyState
+{
+    NN, // Both Not Started
+    NE, // Product 1 Not Started, Product 2 Editing
+    ND, // Product 1 Not Started, Product 2 EditingDone
+    EN, // Product 1 Editing, Product 2 Not Started
+    EE, // Both Editing
+    ED, // Product 1 Editing, Product 2 EditingDone
+    DN, // Product 1 EditingDone, Product 2 Not Started
+    DE, // Product 1 EditingDone, Product 2 Editing
+    DD  // Both EditingDone
+}
+
+class Product
+{
+    public string Description { get; set; } = string.Empty;
+    public ProductState State { get; set; } = ProductState.NotStarted;
+}
+
+class ProductFamily
+{
+    public Product[] Products { get; set; } = [new Product { Description = "Product 1" }, new Product { Description = "Product 2" }];
+
+    public ProductFamilyState GetFamilyState()
+    {
+        var state1 = Products[0].State;
+        var state2 = Products[1].State;
+
+        return (state1, state2) switch
+        {
+            (ProductState.NotStarted, ProductState.NotStarted) => ProductFamilyState.NN,
+            (ProductState.NotStarted, ProductState.Editing) => ProductFamilyState.NE,
+            (ProductState.NotStarted, ProductState.EditingDone) => ProductFamilyState.ND,
+            (ProductState.Editing, ProductState.NotStarted) => ProductFamilyState.EN,
+            (ProductState.Editing, ProductState.Editing) => ProductFamilyState.EE,
+            (ProductState.Editing, ProductState.EditingDone) => ProductFamilyState.ED,
+            (ProductState.EditingDone, ProductState.NotStarted) => ProductFamilyState.DN,
+            (ProductState.EditingDone, ProductState.Editing) => ProductFamilyState.DE,
+            (ProductState.EditingDone, ProductState.EditingDone) => ProductFamilyState.DD,
+            _ => throw new InvalidOperationException("Unknown state")
+        };
+    }
+
+    public void ShowCurrentFamilyState()
+    {
+        Console.WriteLine();
+        Console.WriteLine("Current States:");
+        for (int i = 0; i < Products.Length; i++)
+        {
+            Console.WriteLine($"Product {i + 1}: {Products[i].Description}, State: {EnumHelper.GetEnumDescription(Products[i].State)}");
+        }
+        Console.WriteLine($"ProductFamily State: {GetFamilyState()}");
+        Console.WriteLine();
+    }
+}
 
 class Program
 {
-    enum ProductState
-    {
-        NotStarted,
-        Editing,
-        EditingDone
-    }
-
-    enum ProductFamilyState
-    {
-        NN, // Both Not Started
-        NE, // Product 1 Not Started, Product 2 Editing
-        ND, // Product 1 Not Started, Product 2 EditingDone
-        EN, // Product 1 Editing, Product 2 Not Started
-        EE, // Both Editing
-        ED, // Product 1 Editing, Product 2 EditingDone
-        DN, // Product 1 EditingDone, Product 2 Not Started
-        DE, // Product 1 EditingDone, Product 2 Editing
-        DD  // Both EditingDone
-    }
-
-    class Product
-    {
-        public string Description { get; set; }
-        public ProductState State { get; set; } = ProductState.NotStarted;
-    }
-
-    class ProductFamily
-    {
-        public Product[] Products { get; set; }
-
-        public ProductFamily()
-        {
-            Products = new Product[]
-            {
-                new Product { Description = "Product 1" },
-                new Product { Description = "Product 2" }
-            };
-        }
-
-        public ProductFamilyState GetFamilyState()
-        {
-            var state1 = Products[0].State;
-            var state2 = Products[1].State;
-
-            return (state1, state2) switch
-            {
-                (ProductState.NotStarted, ProductState.NotStarted) => ProductFamilyState.NN,
-                (ProductState.NotStarted, ProductState.Editing) => ProductFamilyState.NE,
-                (ProductState.NotStarted, ProductState.EditingDone) => ProductFamilyState.ND,
-                (ProductState.Editing, ProductState.NotStarted) => ProductFamilyState.EN,
-                (ProductState.Editing, ProductState.Editing) => ProductFamilyState.EE,
-                (ProductState.Editing, ProductState.EditingDone) => ProductFamilyState.ED,
-                (ProductState.EditingDone, ProductState.NotStarted) => ProductFamilyState.DN,
-                (ProductState.EditingDone, ProductState.Editing) => ProductFamilyState.DE,
-                (ProductState.EditingDone, ProductState.EditingDone) => ProductFamilyState.DD,
-                _ => throw new InvalidOperationException("Unknown state")
-            };
-        }
-    }
-
     static void Main(string[] args)
     {
-        ProductFamily productFamily = new ProductFamily();
+        ProductFamily productFamily = new();
         bool continueEditing = true;
 
         while (continueEditing)
         {
             Console.Clear();
-            ShowCurrentState(productFamily);
-            Console.WriteLine("Select an option:");
+            productFamily.ShowCurrentFamilyState();
+            Console.WriteLine("Enter your choice:");
 
             ProductFamilyState familyState = productFamily.GetFamilyState();
             DisplayOptions(familyState);
@@ -96,37 +104,38 @@ class Program
         switch (state)
         {
             case ProductFamilyState.NN:
-                Console.WriteLine("1: Edit Product 1");
-                Console.WriteLine("2: Edit Product 2");
+                Console.WriteLine("1: Edit Product 1");   //NN_EN
+                Console.WriteLine("2: Edit Product 2");   //NN_NE
                 break;
             case ProductFamilyState.NE:
-                Console.WriteLine("1: Edit Product 1");
-                Console.WriteLine("2: Edit Product 2");
-                Console.WriteLine("3: Finish Product 2");
+                Console.WriteLine("1: Edit Product 1");   //NE_EE
+                Console.WriteLine("2: Edit Product 2");   //NE_NE
+                Console.WriteLine("3: Finish Product 2"); //NE_ND
                 break;
             case ProductFamilyState.EN:
-                Console.WriteLine("1: Edit Product 1");
-                Console.WriteLine("2: Edit Product 2");
-                Console.WriteLine("3: Finish Product 1");
+                Console.WriteLine("1: Edit Product 1");   //EN_EN
+                Console.WriteLine("2: Edit Product 2");   //EN_EE
+                Console.WriteLine("3: Finish Product 1"); //EN_DN
                 break;
             case ProductFamilyState.ND:
-                Console.WriteLine("1: Edit Product 1");
+                Console.WriteLine("1: Edit Product 1");   //ND_ED 
                 break;
             case ProductFamilyState.EE:
-                Console.WriteLine("1: Edit Product 1");
-                Console.WriteLine("2: Edit Product 2");
-                Console.WriteLine("3: Finish Product 1");
-                Console.WriteLine("4: Finish Product 2");
+                Console.WriteLine("1: Edit Product 1");   //EE_EE
+                Console.WriteLine("2: Edit Product 2");   //EE_EE 
+                Console.WriteLine("3: Finish Product 1"); //EE_DE
+                Console.WriteLine("4: Finish Product 2"); //EE_ED
                 break;
             case ProductFamilyState.ED:
-                Console.WriteLine("1: Edit Product 1");
-                Console.WriteLine("2: Finish Product 1");
+                Console.WriteLine("1: Edit Product 1");   //ED_ED
+                Console.WriteLine("2: Finish Product 1"); //ED_DD
                 break;
             case ProductFamilyState.DN:
-                Console.WriteLine("2: Edit Product 2");
+                Console.WriteLine("1: Edit Product 2");   //DN_DE
                 break;
             case ProductFamilyState.DE:
-                Console.WriteLine("2: Finish Product 2");
+                Console.WriteLine("1: Edit Product 2");   //DE_DE
+                Console.WriteLine("2: Finish Product 2"); //DE_DD
                 break;
             case ProductFamilyState.DD:
                 Console.WriteLine("Product family finished editing");
@@ -191,7 +200,8 @@ class Program
                 else if (choice == '2')
                 {
                     EditProduct(productFamily.Products[1]);
-                } else if (choice == '3')
+                }
+                else if (choice == '3')
                 {
                     FinishProduct(productFamily.Products[0]);
                 }
@@ -204,13 +214,14 @@ class Program
                 if (choice == '1')
                 {
                     EditProduct(productFamily.Products[0]);
-                } else if (choice == '2')
+                }
+                else if (choice == '2')
                 {
                     FinishProduct(productFamily.Products[0]);
                 }
                 break;
             case ProductFamilyState.DN:
-                if (choice == '2')
+                if (choice == '1')
                 {
                     EditProduct(productFamily.Products[1]);
                 }
@@ -233,6 +244,7 @@ class Program
 
     private static void EditProduct(Product product)
     {
+        Console.WriteLine();
         Console.WriteLine("Edit the product description (type '0' to finish): ");
         product.State = ProductState.Editing;
 
@@ -254,18 +266,22 @@ class Program
         Console.WriteLine($"Finishing editing for {product.Description}");
         product.State = ProductState.EditingDone;
     }
-
-    private static void ShowCurrentState(ProductFamily productFamily)
-    {
-        Console.WriteLine("Current States:");
-        for (int i = 0; i < productFamily.Products.Length; i++)
-        {
-            Console.WriteLine($"Product {i + 1}: {productFamily.Products[i].Description}, State: {productFamily.Products[i].State}");
-        }
-        Console.WriteLine($"ProductFamily State: {productFamily.GetFamilyState()}");
-        Console.WriteLine();
-    }
 }
 
+public static class EnumHelper
+{
+    public static string GetEnumDescription(Enum value)
+    {
+        FieldInfo fi = value.GetType().GetField(value.ToString());
+        DescriptionAttribute[] attributes = (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
 
-
+        if (attributes != null && attributes.Length > 0)
+        {
+            return attributes[0].Description;
+        }
+        else
+        {
+            return value.ToString();
+        }
+    }
+}
