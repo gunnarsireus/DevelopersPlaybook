@@ -1,4 +1,4 @@
-﻿namespace StateMachine
+﻿namespace ProductFamilyStateMachine
 {
     using System;
     using System.Collections.Generic;
@@ -7,27 +7,24 @@
 
     public enum StateTransition
     {
-        StartEditProductType1,
-        StartEditProductType2,
-        StartEditProductType3,
-        EditProductType1,
-        EditProductType2,
-        EditProductType3,
-        FinishEditProductType1,
-        FinishEditProductType2,
-        FinishEditProductType3,
+        StartEditProduct1And2NotStarted,
+        StartEditProduct2And1NotStarted,
+        EditProduct1,
+        EditProduct2,
+        FinishEditProduct1,
+        FinishEditProduct2,
         CompleteProductFamily,
         CancelProductFamily
     }
     public enum ProductFamilyState
     {
-        NotStarted,
-        ProductType1EditStarted,
-        ProductType2EditStarted,
-        ProductType3EditStarted,
-        ProductType1EditFinished,
-        ProductType2EditFinished,
-        ProductType3EditFinished,
+        NoEditStarted,
+        Product1EditStarted2NotStarted,
+        Product2EditStarted1NotStarted,
+        Product1And2EditStarted,
+        Product1EditFinished2NotFinished,
+        Product2EditFinished1NotFinished,
+        Product1And2EditFinished,
         Completed,
         Canceled,
     }
@@ -36,9 +33,8 @@
     {
         FirstProduct,
         SecondProduct,
-        ThirdProduct
     }
-    public enum ProductChangeStatus
+    public enum ProductEditStatus
     {
         NotStarted,
         Started,
@@ -51,60 +47,40 @@
         private static Dictionary<ProductFamilyState, Dictionary<StateTransition, ProductFamilyState>> allowedTransitions = new()
         {
             {
-                ProductFamilyState.NotStarted,
+                ProductFamilyState.NoEditStarted,
                 new Dictionary<StateTransition, ProductFamilyState>
                 {
-                    {StateTransition.StartEditProductType1, ProductFamilyState.ProductType1EditStarted},
-                    {StateTransition.StartEditProductType2, ProductFamilyState.ProductType2EditStarted},
-                    {StateTransition.StartEditProductType3, ProductFamilyState.ProductType3EditStarted}
+                    {StateTransition.StartEditProduct1And2NotStarted, ProductFamilyState.Product1EditStarted2NotStarted},
+                    {StateTransition.StartEditProduct2And1NotStarted, ProductFamilyState.Product2EditStarted1NotStarted},
                 }
             },
             {
-                ProductFamilyState.ProductType1EditStarted,
+                ProductFamilyState.Product1EditStarted2NotStarted,
                 new Dictionary<StateTransition, ProductFamilyState>
                 {
-                    {StateTransition.FinishEditProductType1, ProductFamilyState.ProductType1EditFinished},
-                    {StateTransition.StartEditProductType2, ProductFamilyState.ProductType2EditStarted},
-                    {StateTransition.StartEditProductType3, ProductFamilyState.ProductType3EditStarted}
+                    {StateTransition.FinishEditProduct1, ProductFamilyState.Product1EditFinished2NotFinished},
+                    {StateTransition.StartEditProduct2And1NotStarted, ProductFamilyState.Product2EditStarted1NotStarted},
                 }
             },
             {
-                ProductFamilyState.ProductType2EditStarted,
+                ProductFamilyState.Product2EditStarted1NotStarted,
                 new Dictionary<StateTransition, ProductFamilyState>
                 {
-                    {StateTransition.FinishEditProductType2, ProductFamilyState.ProductType2EditFinished},
-                    {StateTransition.StartEditProductType3, ProductFamilyState.ProductType3EditStarted}
+                    {StateTransition.FinishEditProduct2, ProductFamilyState.Product2EditFinished1NotFinished},
                 }
             },
             {
-                ProductFamilyState.ProductType3EditStarted,
+                ProductFamilyState.Product1EditFinished2NotFinished,
                 new Dictionary<StateTransition, ProductFamilyState>
                 {
-                    {StateTransition.FinishEditProductType3, ProductFamilyState.ProductType3EditFinished},
+                    {StateTransition.StartEditProduct2And1NotStarted, ProductFamilyState.Product2EditStarted1NotStarted},
                 }
             },
             {
-                ProductFamilyState.ProductType1EditFinished,
+                ProductFamilyState.Product2EditFinished1NotFinished,
                 new Dictionary<StateTransition, ProductFamilyState>
                 {
-                    {StateTransition.StartEditProductType2, ProductFamilyState.ProductType2EditStarted},
-                    {StateTransition.StartEditProductType3, ProductFamilyState.ProductType3EditStarted}
-                }
-            },
-            {
-                ProductFamilyState.ProductType2EditFinished,
-                new Dictionary<StateTransition, ProductFamilyState>
-                {
-                    {StateTransition.StartEditProductType2, ProductFamilyState.ProductType2EditStarted},
-                    {StateTransition.StartEditProductType3, ProductFamilyState.ProductType3EditStarted}
-                }
-            },
-            {
-                ProductFamilyState.ProductType3EditFinished,
-                new Dictionary<StateTransition, ProductFamilyState>
-                {
-                    {StateTransition.CompleteProductFamily, ProductFamilyState.Completed},
-                    {StateTransition.CancelProductFamily, ProductFamilyState.Canceled},
+                    {StateTransition.StartEditProduct2And1NotStarted, ProductFamilyState.Product2EditStarted1NotStarted},
                 }
             },
             {
@@ -136,7 +112,7 @@
 
         public ProductFamily()
         {
-            currentState = ProductFamilyState.NotStarted;
+            currentState = ProductFamilyState.NoEditStarted;
         }
 
         public void ChangeState(StateTransition transition)
@@ -193,9 +169,8 @@
         {
             StateActions = new Dictionary<ProductFamilyState, Action>()
             {
-                { ProductFamilyState.ProductType1EditStarted, () => EditProduct(FirstProduct) },
-                { ProductFamilyState.ProductType2EditStarted, () => EditProduct(SecondProduct) },
-                { ProductFamilyState.ProductType3EditStarted, () => EditProduct(ThirdProduct) },
+                { ProductFamilyState.Product1EditStarted2NotStarted, () => EditProduct(FirstProduct) },
+                { ProductFamilyState.Product2EditStarted1NotStarted, () => EditProduct(SecondProduct) },
                 // Add more states and corresponding actions as needed
             };
         }
@@ -213,8 +188,7 @@
 
         public Product FirstProduct { get; set; }  = new(ProductTypes.FirstProduct);
         public Product SecondProduct { get; set; } = new(ProductTypes.SecondProduct);
-        public Product ThirdProduct { get; set; } = new(ProductTypes.ThirdProduct);
-        public Product[] Products { get; set; } = new Product[] { new(ProductTypes.FirstProduct), new(ProductTypes.SecondProduct), new(ProductTypes.ThirdProduct) };
+        public Product[] Products { get; set; } = new Product[] { new(ProductTypes.FirstProduct), new(ProductTypes.SecondProduct) };
     }
 
     class Product
@@ -224,7 +198,7 @@
             ProductType = type;
         }
         public ProductTypes ProductType;
-        public ProductChangeStatus ChangeStatus;
+        public ProductEditStatus EditStatus;
         public string Description { get; set; } = string.Empty;
     }
 
@@ -277,7 +251,6 @@
             var productFamily = new ProductFamily();
             productFamily.FirstProduct.Description = "Product 1 Description";
             productFamily.SecondProduct.Description = "Product 2 Description";
-            productFamily.ThirdProduct.Description = "Product 3 Description";
             productFamily.SetupStateActions();
             return productFamily;
         }

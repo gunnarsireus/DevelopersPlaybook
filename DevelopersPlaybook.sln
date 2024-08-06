@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediaPlayerState", "MediaPl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactHomepage", "ReactHomepage\ReactHomepage.csproj", "{77CF47C2-8C03-4925-854C-147E66E6D5F1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductFamily2ProductsStateMachineIfThenElse", "ProductFamily2ProductsStateMachineIfThenElse\ProductFamily2ProductsStateMachineIfThenElse.csproj", "{17FCCD0E-B52D-4DF4-98CA-BAE28A70C05E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{77CF47C2-8C03-4925-854C-147E66E6D5F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77CF47C2-8C03-4925-854C-147E66E6D5F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{77CF47C2-8C03-4925-854C-147E66E6D5F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17FCCD0E-B52D-4DF4-98CA-BAE28A70C05E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17FCCD0E-B52D-4DF4-98CA-BAE28A70C05E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17FCCD0E-B52D-4DF4-98CA-BAE28A70C05E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17FCCD0E-B52D-4DF4-98CA-BAE28A70C05E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

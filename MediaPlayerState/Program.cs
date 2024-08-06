@@ -138,13 +138,13 @@ namespace MediaPlayerState
             {
                 Console.WriteLine($"\nCurrent state: {player.GetCurrentState()}");
                 List<string> validCommands = player.GetValidCommandsByCurrentState();
-                Console.WriteLine("Available commands: " + string.Join(", ", validCommands));
-                Console.WriteLine("Enter a command:");
+                Console.WriteLine("Available states: " + string.Join(", ", validCommands));
+                Console.WriteLine("Enter a state:");
                 userInput = Console.ReadLine().ToLower();
 
                 if (!validCommands.Contains(userInput))
                 {
-                    Console.WriteLine("Invalid command. Please try again.");
+                    Console.WriteLine("Invalid state. Please try again.");
                     continue;
                 }
 
@@ -166,7 +166,7 @@ namespace MediaPlayerState
                         Console.WriteLine("Exiting...");
                         break;
                     default:
-                        Console.WriteLine("Invalid command. Please try again.");
+                        Console.WriteLine("Invalid state. Please try again.");
                         break;
                 }
             }
