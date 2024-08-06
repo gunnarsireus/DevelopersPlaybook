@@ -101,21 +101,26 @@ class Program
                 break;
             case ProductFamilyState.NE:
                 Console.WriteLine("1: Edit Product 1");
-                Console.WriteLine("2: Finish Product 2");
+                Console.WriteLine("2: Edit Product 2");
+                Console.WriteLine("3: Finish Product 2");
                 break;
             case ProductFamilyState.EN:
-                Console.WriteLine("1: Finish Product 1");
+                Console.WriteLine("1: Edit Product 1");
                 Console.WriteLine("2: Edit Product 2");
+                Console.WriteLine("3: Finish Product 1");
                 break;
             case ProductFamilyState.ND:
                 Console.WriteLine("1: Edit Product 1");
                 break;
             case ProductFamilyState.EE:
-                Console.WriteLine("1: Finish Product 1");
-                Console.WriteLine("2: Finish Product 2");
+                Console.WriteLine("1: Edit Product 1");
+                Console.WriteLine("2: Edit Product 2");
+                Console.WriteLine("3: Finish Product 1");
+                Console.WriteLine("4: Finish Product 2");
                 break;
             case ProductFamilyState.ED:
-                Console.WriteLine("1: Finish Product 1");
+                Console.WriteLine("1: Edit Product 1");
+                Console.WriteLine("2: Finish Product 1");
                 break;
             case ProductFamilyState.DN:
                 Console.WriteLine("2: Edit Product 2");
@@ -148,7 +153,12 @@ class Program
                 if (choice == '1')
                 {
                     EditProduct(productFamily.Products[0]);
-                } else if (choice == '2')
+                }
+                else if (choice == '2')
+                {
+                    EditProduct(productFamily.Products[1]);
+                }
+                else if (choice == '3')
                 {
                     FinishProduct(productFamily.Products[1]);
                 }
@@ -156,11 +166,15 @@ class Program
             case ProductFamilyState.EN:
                 if (choice == '1')
                 {
-                    FinishProduct(productFamily.Products[0]);
+                    EditProduct(productFamily.Products[0]);
                 }
                 else if (choice == '2')
                 {
                     EditProduct(productFamily.Products[1]);
+                }
+                else if (choice == '3')
+                {
+                    FinishProduct(productFamily.Products[0]);
                 }
                 break;
             case ProductFamilyState.ND:
@@ -172,15 +186,25 @@ class Program
             case ProductFamilyState.EE:
                 if (choice == '1')
                 {
-                    FinishProduct(productFamily.Products[0]);
+                    EditProduct(productFamily.Products[0]);
                 }
                 else if (choice == '2')
+                {
+                    EditProduct(productFamily.Products[1]);
+                } else if (choice == '3')
+                {
+                    FinishProduct(productFamily.Products[0]);
+                }
+                else if (choice == '4')
                 {
                     FinishProduct(productFamily.Products[1]);
                 }
                 break;
             case ProductFamilyState.ED:
                 if (choice == '1')
+                {
+                    EditProduct(productFamily.Products[0]);
+                } else if (choice == '2')
                 {
                     FinishProduct(productFamily.Products[0]);
                 }
@@ -192,7 +216,11 @@ class Program
                 }
                 break;
             case ProductFamilyState.DE:
-                if (choice == '2')
+                if (choice == '1')
+                {
+                    EditProduct(productFamily.Products[1]);
+                }
+                else if (choice == '2')
                 {
                     FinishProduct(productFamily.Products[1]);
                 }
