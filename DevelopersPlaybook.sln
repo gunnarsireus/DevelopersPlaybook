@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PoissonDistrbution", "Poiss
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactHomepage", "ReactHomepage\ReactHomepage.csproj", "{77CF47C2-8C03-4925-854C-147E66E6D5F1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductFamilyIfThenElse", "ProductFamilyIfThenElse\ProductFamilyIfThenElse.csproj", "{17FCCD0E-B52D-4DF4-98CA-BAE28A70C05E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductFamilySwitch", "ProductFamilySwitch\ProductFamilySwitch.csproj", "{17FCCD0E-B52D-4DF4-98CA-BAE28A70C05E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
