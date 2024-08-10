@@ -1,13 +1,9 @@
-﻿using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
-using ReactHomepage.DAL;
+﻿using ReactHomepage.DAL;
 using ReactHomepage.Interfaces;
 using ReactHomepage.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
-using System.Data.SqlClient;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -62,63 +58,17 @@ namespace ReactHomepage.Models
 
         public void DeletePhoto(int photoId)
         {
-            var db = _context.Database.GetDbConnection().ConnectionString;
-            if (db.IndexOf("Personal.db") != -1)
-            {
-                using (var conn = new SqliteConnection(db))
-                {
-                    using (var cmd = new SqliteCommand("DELETE FROM Photos WHERE PhotoID=" + photoId, conn))
-                    {
-                        conn.Open();
-                        cmd.ExecuteNonQuery();
-                        conn.Close();
-                    }
-                }
-            }
-            else
-            {
-                using (var connection = new SqlConnection(ConfigurationManager.ConnectionStrings["Personal"].ConnectionString))
-                {
-                    using (var command = new SqlCommand("RemovePhoto", connection))
-                    {
-                        command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.Add(new SqlParameter("@PhotoID", photoId));
-                        connection.Open();
-                        command.ExecuteNonQuery();
-                    }
-                }
-            }
+            var photo = _context.Photos.Single(p => p.PhotoID == photoId);
+            _context.Photos.Remove(photo);
+            _context.SaveChanges();
         }
 
         public void UpdatePhoto(string caption, int photoId)
         {
-            var db = _context.Database.GetDbConnection().ConnectionString;
-            if (db.IndexOf("Personal.db") != -1)
-            {
-                using (var conn = new SqliteConnection(db))
-                {
-                    using (var cmd = new SqliteCommand("UPDATE Photos SET Caption='" + caption + "' WHERE PhotoID=" + photoId, conn))
-                    {
-                        conn.Open();
-                        cmd.ExecuteNonQuery();
-                        conn.Close();
-                    }
-                }
-            }
-            else
-            {
-                using (var connection = new SqlConnection(ConfigurationManager.ConnectionStrings["Personal"].ConnectionString))
-                {
-                    using (var command = new SqlCommand("EditPhoto", connection))
-                    {
-                        command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.Add(new SqlParameter("@Caption", caption));
-                        command.Parameters.Add(new SqlParameter("@PhotoID", photoId));
-                        connection.Open();
-                        command.ExecuteNonQuery();
-                    }
-                }
-            }
+            var photo = _context.Photos.Single(p => p.PhotoID == photoId);
+            photo.Caption = caption;
+            _context.Photos.Update(photo);
+            _context.SaveChanges();
         }
 
         public Stream GetFirstPhoto(int albumId, PhotoSize size)
@@ -195,7 +145,7 @@ namespace ReactHomepage.Models
                 BytesFull = ResizeImageFile(bytesOriginal, 600),
                 BytesPoster = ResizeImageFile(bytesOriginal, 198),
                 BytesThumb = ResizeImageFile(bytesOriginal, 100),
-                PhotoID = 0             
+                PhotoID = 0
             };
 
             _context.Photos.Add(photo);

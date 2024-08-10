@@ -8,9 +8,10 @@ import { useGlobalState, useGlobalDispatch } from '../GlobalState';
 
 const FileUploadFunction = (props) => {
   const [image, setImage] = useState({ preview: "", raw: "" });
-  const [state, globalState] = useGlobalState();
-  const { state: userState } = useSessionUserContext();
+  const globalState = useGlobalState();
   const globalDispatch = useGlobalDispatch();
+
+  const { state: userState } = useSessionUserContext();
 
   const reducer = (state, action) => {
     switch (action.type) {

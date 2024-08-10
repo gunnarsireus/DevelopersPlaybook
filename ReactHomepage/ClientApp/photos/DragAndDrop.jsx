@@ -3,7 +3,7 @@ import './DragAndDrop.css';
 
 const DragAndDrop = props => {
 
-  const { data, dispatch } = props;
+  const { data, dispatch, onFileDropped } = props;
 
   const handleDragEnter = e => {
     e.preventDefault();
@@ -34,7 +34,7 @@ const DragAndDrop = props => {
     let files = [...e.dataTransfer.files];
 
     if (files && files.length > 0) {
-      props.onFileDropped(files);
+      onFileDropped(files);
       const existingFiles = data.fileList.map(f => f.name)
       files = files.filter(f => !existingFiles.includes(f.name))
 
