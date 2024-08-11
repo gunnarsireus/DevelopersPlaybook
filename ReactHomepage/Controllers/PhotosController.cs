@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ReactHomepage.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
+using System;
 using System.IO;
 using System.Linq;
 
@@ -41,18 +42,25 @@ namespace ReactHomepage.Controllers
         [HttpPost("add")]
         [Authorize]
         [SwaggerOperation(Summary = "Add photo", Description = "Add photo")]
-        public ActionResult Add([FromForm] FormData formData)
+        public IActionResult Add([FromForm] FormData formData)
         {
-            using (var ms = new MemoryStream())
+            try
             {
-                formData.Image.CopyTo(ms);
-                var fileBytes = ms.ToArray();
-                _photoManager.AddPhoto(formData.AlbumId, formData.Caption, fileBytes);
+                using (var ms = new MemoryStream())
+                {
+                    formData.Image.CopyTo(ms);
+                    var fileBytes = ms.ToArray();
+                    _photoManager.AddPhoto(formData.AlbumId, formData.Caption, fileBytes);
+                }
+
+                return Ok(new { message = "Photo added successfully." });
             }
-
-            return Ok(new { message = "Photo added successfully." });
-
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = "An error occurred while processing your request.", details = ex.InnerException?.Message ?? ex.Message });
+            }
         }
+
 
         [HttpPut("update/{id}")]
         [Authorize]

@@ -1,12 +1,12 @@
 ﻿using ReactHomepage.DAL;
 using ReactHomepage.Interfaces;
 using ReactHomepage.ViewModels;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 
@@ -231,35 +231,31 @@ namespace ReactHomepage.Models
 
         private static byte[] ResizeImageFile(byte[] imageFile, int targetSize)
         {
-            using (Image oldImage = Image.FromStream(new MemoryStream(imageFile)))
+            using (var image = Image.Load(imageFile))
             {
-                var newSize = CalculateDimensions(oldImage.Size, targetSize);
-                using var newImage = new Bitmap(newSize.Width, newSize.Height, PixelFormat.Format24bppRgb);
-                using var canvas = Graphics.FromImage(newImage);
-                canvas.SmoothingMode = SmoothingMode.AntiAlias;
-                canvas.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                canvas.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                canvas.DrawImage(oldImage, new Rectangle(new Point(0, 0), newSize));
-                var m = new MemoryStream();
-                newImage.Save(m, ImageFormat.Jpeg);
-                return m.GetBuffer();
+                var newSize = CalculateDimensions(image.Size, targetSize);
+                image.Mutate(x => x
+                    .Resize(newSize.Width, newSize.Height));
+
+                using var m = new MemoryStream();
+                image.Save(m, new JpegEncoder()); // Use the JpegEncoder here
+                return m.ToArray();
             }
         }
 
-        private static Size CalculateDimensions(Size oldSize, int targetSize)
+
+        private static Size CalculateDimensions(Size originalSize, int targetSize)
         {
-            var newSize = default(Size);
-            if ((oldSize.Height > oldSize.Width))
+            // Adjust this method to properly calculate new dimensions
+            var aspectRatio = (double)originalSize.Width / originalSize.Height;
+            if (aspectRatio > 1)
             {
-                newSize.Width = Convert.ToInt32((oldSize.Width * Convert.ToSingle((targetSize / Convert.ToSingle(oldSize.Height)))));
-                newSize.Height = targetSize;
+                return new Size(targetSize, (int)(targetSize / aspectRatio));
             }
             else
             {
-                newSize.Width = targetSize;
-                newSize.Height = Convert.ToInt32((oldSize.Height * Convert.ToSingle((targetSize / Convert.ToSingle(oldSize.Width)))));
+                return new Size((int)(targetSize * aspectRatio), targetSize);
             }
-            return newSize;
         }
     }
 }

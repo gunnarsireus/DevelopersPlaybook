@@ -29,19 +29,31 @@ export const postHelper = async (url, request, token) => {
 }
 
 export const postImageHelper = async (url, formData, token) => {
-  const response = await fetch(url, {
-    headers: {
-      Accept: 'application/json',
-      "Authorization": `Bearer ${token}`
-    },
-    method: "POST",
-    body: formData
-  });
+  try {
+    const response = await fetch(url, {
+      headers: {
+        Accept: 'application/json',
+        "Authorization": `Bearer ${token}`
+      },
+      method: "POST",
+      body: formData
+    });
 
-  if (!response.ok) throw response;
+    if (!response.ok) {
+      // Attempt to parse the error response
+      const errorResponse = await response.json();
+      console.log("errorResponse: ", errorResponse)
+      throw new Error(errorResponse.error || 'An unexpected error occurred');
+    }
 
-  return response.json();
+    return response.json();
+  } catch (error) {
+    // Handle error (display message to user, log it, etc.)
+    console.error('Upload failed:', error.message);
+    throw error; // Optionally rethrow or handle the error as needed
+  }
 }
+
 
 export const putHelper = async (url, request, token) => {
   const response = await fetch(url, {
