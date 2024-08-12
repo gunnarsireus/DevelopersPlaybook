@@ -2,7 +2,7 @@
 import { Link } from 'react-router-dom';
 import { routeChangedSignal } from '../Frame';
 import PhotoFrame from '../photos/PhotoFrame';
-import epostJpg from '../../wwwroot/Content/images/mail.png';
+import epostJpg from '../../wwwroot/content/images/mail.png';
 import { Animate, AnimateKeyframes } from "react-simple-animate";
 
 const Home = () => {
@@ -113,7 +113,7 @@ const Home = () => {
                       <div id="divDownload" style={{ minHeight: '50px' }}>
                         <p>
                           <a href="/Handler/Download/0/M">
-                            <img src="./Content/images/button-download.gif" alt="download photo" />
+                            <img src="./content/images/button-download.gif" alt="download photo" />
                           </a>
                         </p>
                         <hr />

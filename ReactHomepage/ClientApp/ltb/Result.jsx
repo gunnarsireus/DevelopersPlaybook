@@ -1,7 +1,7 @@
 ﻿import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Row, Col} from 'react-bootstrap';
-import progress from '../../wwwroot/Content/images/progress.gif';
+import progress from '../../wwwroot/content/images/progress.gif';
 
 export default class Result extends Component {
     constructor(props) {

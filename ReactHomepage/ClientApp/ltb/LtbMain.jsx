@@ -9,7 +9,7 @@ import { Row, Col, Button } from 'react-bootstrap';
 import Select from '../common/Select';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import Result from './Result';
-import ltbCalculationPrincipal from '../../wwwroot/Content/images/LtbCalculationPrincipal.jpg';
+import ltbCalculationPrincipal from '../../wwwroot/content/images/LtbCalculationPrincipal.jpg';
 import * as apiClient from "../helpers/ApiHelpers";
 import Chart from './Chart';
 

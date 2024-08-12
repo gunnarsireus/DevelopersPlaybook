@@ -6,7 +6,7 @@ export default class PhotoFrame extends Component {
     }
 
      render() {
-       return (<table className="photo-frame" style={{ minHeight: "200px", visibility: this.props.hidden ? 'hidden' : 'visible', backgroundImage: this.props.defaultImage ? 'url("/Content/images/default-image.png")' : null, backgroundPosition: this.props.defaultImage ? 'center' : null }}>
+       return (<table className="photo-frame" style={{ minHeight: "200px", visibility: this.props.hidden ? 'hidden' : 'visible', backgroundImage: this.props.defaultImage ? 'url("/content/images/default-image.png")' : null, backgroundPosition: this.props.defaultImage ? 'center' : null }}>
             <tbody>
                  <tr>
                      <td className="topx--" />

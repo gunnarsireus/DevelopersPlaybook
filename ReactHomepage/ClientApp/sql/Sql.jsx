@@ -1,10 +1,10 @@
 ﻿import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { routeChangedSignal } from '../Frame';
-import CrossJoin from '../../wwwroot/Content/images/CrossJoin.png';
-import InnerJoin from '../../wwwroot/Content/images/InnerJoin.png';
-import LeftOuterJoin from '../../wwwroot/Content/images/LeftOuterJoin.png';
-import GroupJoin from '../../wwwroot/Content/images/GroupJoin.png';
+import CrossJoin from '../../wwwroot/content/images/CrossJoin.png';
+import InnerJoin from '../../wwwroot/content/images/InnerJoin.png';
+import LeftOuterJoin from '../../wwwroot/content/images/LeftOuterJoin.png';
+import GroupJoin from '../../wwwroot/content/images/GroupJoin.png';
 import { Row, Col, Carousel } from 'react-bootstrap';
 
 class Sql extends Component {

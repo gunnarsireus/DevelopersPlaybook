@@ -115,11 +115,11 @@ namespace ReactHomepage.Models
             // Path to the default image, adjust this to your actual default image path
             string defaultImagePath = size switch
             {
-                PhotoSize.Large => "wwwroot/Content/images/default-image-large.png",
-                PhotoSize.Medium => "wwwroot/Content/images/default-image-medium.png",
-                PhotoSize.Original => "wwwroot/Content/images/default-image.png",
-                PhotoSize.Small => "wwwroot/Content/images/default-image-small.png",
-                _ => "wwwroot/Content/images/default-image-small.png" // Fallback to a generic default image
+                PhotoSize.Large => "wwwroot/content/images/default-image-large.png",
+                PhotoSize.Medium => "wwwroot/content/images/default-image-medium.png",
+                PhotoSize.Original => "wwwroot/content/images/default-image.png",
+                PhotoSize.Small => "wwwroot/content/images/default-image-small.png",
+                _ => "wwwroot/content/images/default-image-small.png" // Fallback to a generic default image
             };
 
             // Load the default image as a byte array

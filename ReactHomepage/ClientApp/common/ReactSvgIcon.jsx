@@ -35,7 +35,7 @@ export default class ReactSvgIcon extends React.Component {
                             return (<img style={{
                                 ...style,
                                 width: 50
-                            }} src="/Content/images/logo.svg" alt="reactLogo"
+                            }} src="/content/images/logo.svg" alt="reactLogo"
                                     />);
                         }}
                     />

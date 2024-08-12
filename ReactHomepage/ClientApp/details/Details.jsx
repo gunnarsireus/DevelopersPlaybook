@@ -92,19 +92,19 @@ const Details = () => {
                 <Col lg={2} md={2} sm={2} xs={2} />
                 <Col lg={3} md={3} sm={3} xs={3}>
                   <Link to="/albums">
-                    <img id="FormView1_Image1" src="/Content/images/button-gallery.gif" style={{ borderWidth: '0px' }} alt="" />
+                    <img id="FormView1_Image1" src="/content/images/button-gallery.gif" style={{ borderWidth: '0px' }} alt="" />
                   </Link> &nbsp;&nbsp;&nbsp;&nbsp;
                   <Link to="#" onClick={(e) => setDetails(e, first)}>
-                    <img src="/Content/images/button-first.gif" style={{ borderWidth: '0px' }} alt="" />
+                    <img src="/content/images/button-first.gif" style={{ borderWidth: '0px' }} alt="" />
                   </Link>
                   <Link to="#" onClick={(e) => setDetails(e, prev)}>
-                    <img src="/Content/images/button-prev.gif" style={{ borderWidth: '0px' }} alt="" />
+                    <img src="/content/images/button-prev.gif" style={{ borderWidth: '0px' }} alt="" />
                   </Link>
                   <Link to="#" onClick={(e) => setDetails(e, next)}>
-                    <img src="/Content/images/button-next.gif" style={{ borderWidth: '0px' }} alt="" />
+                    <img src="/content/images/button-next.gif" style={{ borderWidth: '0px' }} alt="" />
                   </Link>
                   <Link to="#" onClick={(e) => setDetails(e, last)}>
-                    <img src="/Content/images/button-last.gif" style={{ borderWidth: '0px' }} alt="" />
+                    <img src="/content/images/button-last.gif" style={{ borderWidth: '0px' }} alt="" />
                   </Link>
                 </Col>
                 <Col lg={7} md={7} sm={7} xs={7} />
@@ -122,7 +122,7 @@ const Details = () => {
                         </PhotoFrame>
                         <p>
                           <a href={`/Handler/Download/${photoId}/Size=L`}>
-                            <img src="/Content/images/button-download.gif" alt="download this photo" />
+                            <img src="/content/images/button-download.gif" alt="download this photo" />
                           </a>
                         </p>
                       </td>
@@ -137,19 +137,19 @@ const Details = () => {
                 <Col md={4} sm={3} xs={2}>{numbers}</Col>
                 <Col md={3} sm={3} xs={3}>
                   <Link to="/albums">
-                    <img id="FormView1_Image2" src="/Content/images/button-gallery.gif" style={{ borderWidth: '0px' }} alt="" />
+                    <img id="FormView1_Image2" src="/content/images/button-gallery.gif" style={{ borderWidth: '0px' }} alt="" />
                   </Link> &nbsp;&nbsp;&nbsp;&nbsp;
                   <Link to="#" onClick={(e) => setDetails(e, first)}>
-                    <img src="/Content/images/button-first.gif" style={{ borderWidth: '0px' }} alt="" />
+                    <img src="/content/images/button-first.gif" style={{ borderWidth: '0px' }} alt="" />
                   </Link>
                   <Link to="#" onClick={(e) => setDetails(e, prev)}>
-                    <img src="/Content/images/button-prev.gif" style={{ borderWidth: '0px' }} alt="" />
+                    <img src="/content/images/button-prev.gif" style={{ borderWidth: '0px' }} alt="" />
                   </Link>
                   <Link to="#" onClick={(e) => setDetails(e, next)}>
-                    <img src="/Content/images/button-next.gif" style={{ borderWidth: '0px' }} alt="" />
+                    <img src="/content/images/button-next.gif" style={{ borderWidth: '0px' }} alt="" />
                   </Link>
                   <Link to="#" onClick={(e) => setDetails(e, last)}>
-                    <img src="/Content/images/button-last.gif" style={{ borderWidth: '0px' }} alt="" />
+                    <img src="/content/images/button-last.gif" style={{ borderWidth: '0px' }} alt="" />
                   </Link>
                 </Col>
                 <Col md={5} sm={6} xs={7} />

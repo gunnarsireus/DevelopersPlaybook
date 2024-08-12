@@ -58,27 +58,27 @@ const AlbumFrame = ({ AlbumID, Caption, PhotoCount, ItemCount, userState, handle
         <tbody>
           <tr>
             <td className="topx----">
-              <img alt="" src="/Content/images/album-l1.gif" style={{ maxHeight: '100%', maxWidth: '100%', verticalAlign: 'top' }} />
+              <img alt="" src="/content/images/album-l1.gif" style={{ maxHeight: '100%', maxWidth: '100%', verticalAlign: 'top' }} />
             </td>
             <td className="top-x---">
-              <img alt="" src="/Content/images/album-mtl.gif" style={{ maxHeight: '100%', maxWidth: '100%', verticalAlign: 'top' }} />
+              <img alt="" src="/content/images/album-mtl.gif" style={{ maxHeight: '100%', maxWidth: '100%', verticalAlign: 'top' }} />
             </td>
             <td className="top--x--" />
             <td className="top---x-">
-              <img alt="" src="/Content/images/album-mtr.gif" style={{ maxHeight: '100%', maxWidth: '100%', verticalAlign: 'top' }} />
+              <img alt="" src="/content/images/album-mtr.gif" style={{ maxHeight: '100%', maxWidth: '100%', verticalAlign: 'top' }} />
             </td>
             <td className="top----x">
-              <img alt="" src="/Content/images/album-r1.gif" style={{ maxHeight: '100%', maxWidth: '100%', verticalAlign: 'top' }} />
+              <img alt="" src="/content/images/album-r1.gif" style={{ maxHeight: '100%', maxWidth: '100%', verticalAlign: 'top' }} />
             </td>
           </tr>
           <tr>
             <td className="mtpx----">
-              <img alt="" src="/Content/images/album-l2.gif" style={{ maxHeight: '100%', maxWidth: '100%', verticalAlign: 'top' }} />
+              <img alt="" src="/content/images/album-l2.gif" style={{ maxHeight: '100%', maxWidth: '100%', verticalAlign: 'top' }} />
             </td>
             <td colSpan="3" rowSpan="3">
               <Animate delaySeconds={ItemCount / 4} play={{ start: { opacity: 0 }, end: { opacity: 1 }, durationSeconds: 1 }}>
                 {isAddNewAlbum ? (
-                  <img src="/Content/images/default-image-small.png" className="photo_198" style={{ border: '4px solid white', maxHeight: '100%', maxWidth: '100%' }} alt={`Sample Photo from Album`} />
+                  <img src="/content/images/default-image-small.png" className="photo_198" style={{ border: '4px solid white', maxHeight: '100%', maxWidth: '100%' }} alt={`Sample Photo from Album`} />
                 ) : (
                   <Link to={`/photos/${AlbumID}/${caption}`}>
                     <img src={`/Handler/Index/AlbumID=${AlbumID}/Size=M`} className="photo_198" style={{ border: '4px solid white', maxHeight: '100%', maxWidth: '100%' }} alt={`Sample Photo from Album Number ${AlbumID}`} />
@@ -87,7 +87,7 @@ const AlbumFrame = ({ AlbumID, Caption, PhotoCount, ItemCount, userState, handle
               </Animate>
             </td>
             <td className="mtp----x">
-              <img alt="" src="/Content/images/album-r2.gif" style={{ maxHeight: '100%', maxWidth: '100%', verticalAlign: 'top' }} />
+              <img alt="" src="/content/images/album-r2.gif" style={{ maxHeight: '100%', maxWidth: '100%', verticalAlign: 'top' }} />
             </td>
           </tr>
           <tr>
@@ -96,25 +96,25 @@ const AlbumFrame = ({ AlbumID, Caption, PhotoCount, ItemCount, userState, handle
           </tr>
           <tr>
             <td className="mbtx----">
-              <img alt="" src="/Content/images/album-l3.gif" style={{ maxHeight: '100%', maxWidth: '100%', verticalAlign: 'top' }} />
+              <img alt="" src="/content/images/album-l3.gif" style={{ maxHeight: '100%', maxWidth: '100%', verticalAlign: 'top' }} />
             </td>
             <td className="mbt----x">
-              <img alt="" src="/Content/images/album-r3.gif" style={{ maxHeight: '100%', maxWidth: '100%', verticalAlign: 'top' }} />
+              <img alt="" src="/content/images/album-r3.gif" style={{ maxHeight: '100%', maxWidth: '100%', verticalAlign: 'top' }} />
             </td>
           </tr>
           <tr>
             <td className="botx----">
-              <img alt="" src="/Content/images/album-l4.gif" style={{ maxHeight: '100%', maxWidth: '100%', verticalAlign: 'top' }} />
+              <img alt="" src="/content/images/album-l4.gif" style={{ maxHeight: '100%', maxWidth: '100%', verticalAlign: 'top' }} />
             </td>
             <td className="bot-x---" style={{ textAlign: 'left' }}>
-              <img alt="" src="/Content/images/album-mbl.gif" style={{ maxHeight: '100%', maxWidth: '100%', verticalAlign: 'top' }} />
+              <img alt="" src="/content/images/album-mbl.gif" style={{ maxHeight: '100%', maxWidth: '100%', verticalAlign: 'top' }} />
             </td>
             <td className="bot--x--" />
             <td className="bot---x-" style={{ textAlign: 'right' }}>
-              <img alt="" src="/Content/images/album-mbr.gif" style={{ maxHeight: '100%', maxWidth: '100%', verticalAlign: 'top' }} />&nbsp;&nbsp;
+              <img alt="" src="/content/images/album-mbr.gif" style={{ maxHeight: '100%', maxWidth: '100%', verticalAlign: 'top' }} />&nbsp;&nbsp;
             </td>
             <td className="bot----x">
-              <img alt="" src="/Content/images/album-r4.gif" style={{ maxHeight: '100%', maxWidth: '100%', verticalAlign: 'top' }} />
+              <img alt="" src="/content/images/album-r4.gif" style={{ maxHeight: '100%', maxWidth: '100%', verticalAlign: 'top' }} />
             </td>
           </tr>
         </tbody>

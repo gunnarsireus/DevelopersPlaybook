@@ -170,7 +170,7 @@ const Photos = () => {
             <Row>
               <div className="buttonbar buttonbar-top">
                 <Link to='/albums'>
-                  <img alt="" src="/Content/images/button-gallery.gif" />
+                  <img alt="" src="/content/images/button-gallery.gif" />
                 </Link>
               </div>
               <Row className="justify-content-md-center">

@@ -1,7 +1,7 @@
 ﻿import React, { useState, useEffect, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
-import logo from "./../wwwroot/Content/images/info.png";
-import hamburger from "./../wwwroot/Content/images/Hamburger.png";
+import logo from "./../wwwroot/content/images/info.png";
+import hamburger from "./../wwwroot/content/images/Hamburger.png";
 import ReactSvgIcon from "./common/ReactSvgIcon";
 import MiniSignal from 'mini-signals';
 
@@ -10,7 +10,7 @@ export const routeChangedSignal = new MiniSignal();
 const Frame = (props) => {
   const [dayNumber, setDayNumber] = useState(new Date().getDay() % 12);
 
-  const getCss = (spriteType, dayNumber) => `transparent url('./Content/images/Bootstrap${spriteType}Composed.jpg') 0 ${-81 * dayNumber}px`;
+  const getCss = (spriteType, dayNumber) => `transparent url('./content/images/Bootstrap${spriteType}Composed.jpg') 0 ${-81 * dayNumber}px`;
   const [todaysHeaderCss, setTodaysHeaderCss] = useState(getCss('Header', dayNumber));
   const [todaysFooterCss, setTodaysFooterCss] = useState(getCss('Footer', dayNumber));
 

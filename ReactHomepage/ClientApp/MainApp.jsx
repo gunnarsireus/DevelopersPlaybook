@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, Suspense, lazy } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { Switch, Route, BrowserRouter, StaticRouter } from 'react-router-dom';
 import Frame from './Frame';
 import Home from './home/Home';
